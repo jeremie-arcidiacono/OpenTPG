@@ -8,22 +8,22 @@
   </head>
   <body onload="onLoad()" style="background-color: #374955">
     <div class="container-stage">
-        <div class="tabbar tab-style2">
-          <ul class="flex-center">
-            <li class="schedule active" data-where="schedule">
-              <span class="material-icons-outlined"> schedule </span>
-            </li>
-            <li class="sync_alt" data-where="sync_alt">
-              <span class="material-icons-outlined"> sync_alt </span>
-            </li>
-            <li class="bus_alert" data-where="bus_alert">
-              <span class="material-icons-outlined"> bus_alert </span>
-            </li>
-            <li class="tune" data-where="tune">
-              <span class="material-icons-outlined"> tune </span>
-            </li>
-          </ul>
-        </div>
+      <div class="tabbar tab-style2">
+        <ul class="flex-center">
+          <li class="schedule active" data-where="schedule">
+            <button class="material-icons-outlined"> schedule </button>
+          </li>
+          <li class="sync_alt" data-where="sync_alt">
+            <button class="material-icons-outlined"> sync_alt </button>
+          </li>
+          <li class="bus_alert" data-where="bus_alert">
+            <button class="material-icons-outlined"> bus_alert </button>
+          </li>
+          <li class="tune" data-where="tune">
+            <button class="material-icons-outlined"> tune </button>
+          </li>
+        </ul>
+      </div>
     </div>
   </body>
 </html>
@@ -32,14 +32,14 @@
   @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
   @import url("https://fonts.googleapis.com/icon?family=Material+Icons+Outlined");
   :root {
-    --accent-color: #f5f5f5 ;
-    --accent-color-fg: #374955 ;
+    --accent-color: #f5f5f5;
+    --accent-color-fg: #374955;
     --backdrop-color: #374955;
-    --app-content-background-color: #374955 ;
+    --app-content-background-color: #374955;
     --inset-shadow: rgba(7, 43, 74, 0.3);
     --outset-shadow: rgba(223, 240, 255, 0.25);
     --clay-box-shadow: rgba(7, 43, 74, 0.3);
-    --clay-background-color: #374955 ;
+    --clay-background-color: #374955;
     --clay-fg-color: #374955;
   }
   body {
@@ -222,7 +222,7 @@
     height: 60px;
     top: -1rem;
   }
-  .tab-style2 .active span {
+  .tab-style2 .active button {
     font-size: 2rem;
   }
   .tab-style2 .active:before,
@@ -274,17 +274,13 @@
     left: 216px;
     z-index: 20;
   }
-  .tab-style3 li:nth-child(5).active ~ .follow {
-    left: 283px;
-    z-index: 20;
-  }
   .tab-style4 li {
     width: 60px;
     height: 40px;
     flex-direction: column;
     overflow: hidden;
   }
-  .tab-style4 li span {
+  .tab-style4 li button {
     position: relative;
     top: 3px;
     transition: top 0.4s ease-out, font-size 0.2s ease-out;
@@ -319,7 +315,7 @@
   .tab-style4 li:nth-child(4):after {
     content: "tune";
   }
-  .tab-style4 .active span {
+  .tab-style4 .active button {
     font-size: 1.1rem;
     top: -4px;
   }
@@ -349,7 +345,7 @@
       inset -2px -2px 8px var(--inset-shadow);
     color: var(--clay-fg-color);
   }
-  .tab-style5 .active span {
+  .tab-style5 .active button {
     font-size: 2rem;
   }
   .container-stage {
@@ -359,6 +355,11 @@
     width: 100%;
     color: #374955;
     text-align: center;
+  }
+  .material-icons-outlined {
+    background-color: #202a30;
+    border: 2px solid #202a30;
+    color: #fcfcfc;
   }
 </style>
 
@@ -371,8 +372,8 @@
 
     lis.forEach((li) => {
       li.addEventListener("click", (e) => {
-        e.stopPropagation();
         e.preventDefault();
+        e.stopPropagation();
         const target = e.currentTarget;
 
         if (
