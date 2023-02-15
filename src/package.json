@@ -19,12 +19,15 @@
   ],
   "license": "Apache-2.0",
   "devDependencies": {
-    "cordova-android": "^10.1.2"
+    "cordova-android": "^10.1.2",
+    "cordova-plugin-network-information": "^3.0.0"
   },
   "cordova": {
     "platforms": [
       "android"
     ],
-    "plugins": {}
+    "plugins": {
+      "cordova-plugin-network-information": {}
+    }
   }
 }
