@@ -8,5 +8,10 @@
     <content src="index.html" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
+    
+    <plugin name="cordova-plugin-navigationbar-color" spec="1.0.2" />
+
     <preference name="orientation" value="portrait" />
+    <preference name="StatusBarBackgroundColor" value="#374955" />
+    <preference name="NavigationBarBackgroundColor" value="#202a30" />
 </widget>

@@ -29,7 +29,12 @@
     ],
     "plugins": {
       "cordova-plugin-network-information": {},
-      "cordova-plugin-statusbar": {}
+      "cordova-plugin-statusbar": {},
+      "cordova-plugin-navigationbar-color": {}
     }
+  },
+  "dependencies": {
+    "cordova-plugin-navigationbar-color": "^0.1.0",
+    "ionic-plugin-navigation-bar-color": "^1.0.2"
   }
 }
