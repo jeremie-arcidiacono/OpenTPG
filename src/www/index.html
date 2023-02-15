@@ -1,34 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="msapplication-tap-highlight" content="no">
-    <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
-    <link rel="stylesheet" href="css/index.css">
-    <title>Open TPG</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
   </head>
-  <body>
+  <body onload="onLoad()" style="background-color: #374955">
     <div class="container-stage">
-      <div class="tabbar tab-style2">
-        <ul class="flex-center">
-          <li class="update active" data-where="update">
-            <span class="material-icons-outlined"> update </span>
-          </li>
-          <li class="sync_alt" data-where="sync_alt">
-            <span class="material-icons-outlined"> sync_alt </span>
-          </li>
-          <li class="bus_alert" data-where="bus_alert">
-            <span class="material-icons-outlined"> bus_alert </span>
-          </li>
-          <li class="tune" data-where="tune">
-            <span class="material-icons-outlined"> tune </span>
-          </li>
-        </ul>
-      </div>
+        <div class="tabbar tab-style2">
+          <ul class="flex-center">
+            <li class="schedule active" data-where="schedule">
+              <span class="material-icons-outlined"> schedule </span>
+            </li>
+            <li class="sync_alt" data-where="sync_alt">
+              <span class="material-icons-outlined"> sync_alt </span>
+            </li>
+            <li class="bus_alert" data-where="bus_alert">
+              <span class="material-icons-outlined"> bus_alert </span>
+            </li>
+            <li class="tune" data-where="tune">
+              <span class="material-icons-outlined"> tune </span>
+            </li>
+          </ul>
+        </div>
     </div>
-    <script src="cordova.js"></script>
-    <script src="js/index.js"></script>
   </body>
 </html>
 
@@ -36,15 +32,15 @@
   @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
   @import url("https://fonts.googleapis.com/icon?family=Material+Icons+Outlined");
   :root {
-    --accent-color: #1fa8f5;
-    --accent-color-fg: #fefefe;
-    --backdrop-color: #89d4fe;
-    --app-content-background-color: #c0d8ec;
+    --accent-color: #f5f5f5 ;
+    --accent-color-fg: #374955 ;
+    --backdrop-color: #374955;
+    --app-content-background-color: #374955 ;
     --inset-shadow: rgba(7, 43, 74, 0.3);
     --outset-shadow: rgba(223, 240, 255, 0.25);
     --clay-box-shadow: rgba(7, 43, 74, 0.3);
-    --clay-background-color: #c0d8ec;
-    --clay-fg-color: #444;
+    --clay-background-color: #374955 ;
+    --clay-fg-color: #374955;
   }
   body {
     background-color: var(--backdrop-color);
@@ -64,61 +60,41 @@
     width: 400px;
     margin: 1rem auto 2rem;
   }
-  .home.active {
+  .schedule.active {
     color: var(--accent-color);
   }
-  .home-style {
-    --app-content-background-color: #c0d8ec;
+  .schedule-style {
+    --app-content-background-color: #374955;
   }
-  .products.active {
-    --outset-shadow: rgba(247, 167, 103, 0.45);
+  .sync_alt.active {
+    color: var(--accent-color);
     --inset-shadow: rgba(149, 62, 8, 0.45);
     --clay-box-shadow: rgba(211, 69, 20, 0.4);
-    --clay-background-color: #d34514;
-    --clay-fg-color: #f1f2f3;
-    color: #690c0c;
   }
-  .products-style {
-    --app-content-background-color: #d36e5a;
+  .sync_alt-style {
+    --app-content-background-color: #374955;
   }
-  .services.active {
-    --outset-shadow: rgba(255, 159, 40, 0.45);
+  .bus_alert.active {
+    color: var(--accent-color);
     --inset-shadow: rgba(88, 54, 13, 0.45);
     --clay-box-shadow: rgba(88, 54, 13, 0.4);
-    --clay-background-color: #ed9426;
-    --clay-fg-color: #f1f2f3;
-    color: #cf5c0f;
   }
-  .services-style {
-    --app-content-background-color: #ed9426;
+  .bus_alert-style {
+    --app-content-background-color: #374955;
   }
-  .about.active {
-    --outset-shadow: rgba(93, 255, 85, 0.45);
+  .tune.active {
+    color: var(--accent-color);
     --inset-shadow: rgba(28, 78, 26, 0.45);
     --clay-box-shadow: rgba(28, 78, 26, 0.4);
-    --clay-background-color: #4dd146;
-    --clay-fg-color: #f1f2f3;
-    color: #4dd146;
   }
-  .about-style {
-    --app-content-background-color: #4dd146;
-  }
-  .help.active {
-    --outset-shadow: rgba(230, 230, 230, 0.45);
-    --inset-shadow: rgba(81, 81, 81, 0.45);
-    --clay-box-shadow: rgba(81, 81, 81, 0.4);
-    --clay-background-color: #a3a3a3;
-    --clay-fg-color: #f1f2f3;
-    color: #783896;
-  }
-  .help-style {
-    --app-content-background-color: #a3a3a3;
+  .tune-style {
+    --app-content-background-color: #374955;
   }
   .tabbar {
     background-color: var(--app-content-background-color);
 
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    height: 120px;
+    height: 71px;
     display: flex;
     flex-direction: column;
     box-sizing: content-box;
@@ -136,7 +112,7 @@
     position: absolute;
     bottom: 0;
     width: 100%;
-    background-color: #f9f8fa;
+    background-color: #202a30;
     align-self: flex-end;
     justify-content: center;
     height: 50px;
@@ -148,11 +124,11 @@
     font-size: 1rem;
     margin-right: 5px;
     transition: all 0.4s;
-    background-color: #f9f8fa;
+    background-color: #202a30;
     width: 60px;
     height: 60px;
     position: relative;
-    color: #888;
+    color: #c2c2c2;
     cursor: pointer;
   }
   .tabbar li:last-child {
@@ -190,7 +166,7 @@
     top: 27px;
     right: -27px;
     border-top: 11px solid var(--app-content-background-color);
-    background-color: #f9f8fa;
+    background-color: #202a30;
     width: 20px;
     height: 20px;
     box-sizing: border-box;
@@ -255,7 +231,7 @@
     content: " ";
     width: 13px;
     height: 13px;
-    border-bottom: 4px solid #f9f8fa;
+    border-bottom: 4px solid #202a30;
     top: 8px;
   }
   .tab-style2 .active:before {
@@ -332,7 +308,7 @@
     text-shadow: inset 2px 2px 8px var(--clay-box-shadow);
   }
   .tab-style4 li:nth-child(1):after {
-    content: "update";
+    content: "schedule";
   }
   .tab-style4 li:nth-child(2):after {
     content: "sync_alt";
@@ -376,13 +352,12 @@
   .tab-style5 .active span {
     font-size: 2rem;
   }
-
   .container-stage {
     position: fixed;
     left: 0;
     bottom: 0;
     width: 100%;
-    color: white;
+    color: #374955;
     text-align: center;
   }
 </style>
@@ -396,8 +371,8 @@
 
     lis.forEach((li) => {
       li.addEventListener("click", (e) => {
-        e.preventDefault();
         e.stopPropagation();
+        e.preventDefault();
         const target = e.currentTarget;
 
         if (
