@@ -1,16 +1,22 @@
 {
   "name": "com.jgcorp.opentpg",
   "displayName": "OpenTPG",
-  "version": "1.0.0",
-  "description": "A sample Apache Cordova application that responds to the deviceready event.",
+  "version": "0.1.0",
+  "description": "A new independent app for Geneva's public transport system (TPG) built with Cordova.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "ecosystem:cordova"
+    "TPG",
+    "Geneva",
+    "Cordova"
   ],
-  "author": "Apache Cordova Team",
+  "author": "Jérémie Arcidiacono and Grégoire Péan",
+  "contributors": [
+    "Jérémie Arcidiacono",
+    "Grégoire Péan"
+  ],
   "license": "Apache-2.0",
   "devDependencies": {
     "cordova-android": "^10.1.2"
@@ -18,6 +24,7 @@
   "cordova": {
     "platforms": [
       "android"
-    ]
+    ],
+    "plugins": {}
   }
 }
