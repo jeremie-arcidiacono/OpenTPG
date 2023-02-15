@@ -7,25 +7,53 @@
     <title>Document</title>
   </head>
   <body onload="onLoad()" style="background-color: #374955">
+    <main>
+      <div id="schedule" style="display: block">
+        <h1>
+          <span class="material-icons-outlined"> schedule </span>
+          <span>schedule</span>
+        </h1>
+      </div>
+      <div id="sync_alt" style="display: none">
+        <h1>
+          <span class="material-icons-outlined"> sync_alt </span>
+          <span>sync_alt</span>
+        </h1>
+      </div>
+      <div id="bus_alert" style="display: none">
+        <h1>
+          <span class="material-icons-outlined"> bus_alert </span>
+          <span>bus_alert</span>
+        </h1>
+      </div>
+      <div id="tune" style="display: none">
+        <h1>
+          <span class="material-icons-outlined"> tune </span>
+          <span>tune</span>
+        </h1>
+      </div>
+    </main>
     <div class="container-stage">
       <div class="tabbar tab-style2">
         <ul class="flex-center">
           <li class="schedule active" data-where="schedule">
-            <button class="material-icons-outlined"> schedule </button>
+            <button class="material-icons-outlined">schedule</button>
           </li>
           <li class="sync_alt" data-where="sync_alt">
-            <button class="material-icons-outlined"> sync_alt </button>
+            <button class="material-icons-outlined">sync_alt</button>
           </li>
           <li class="bus_alert" data-where="bus_alert">
-            <button class="material-icons-outlined"> bus_alert </button>
+            <button class="material-icons-outlined">bus_alert</button>
           </li>
           <li class="tune" data-where="tune">
-            <button class="material-icons-outlined"> tune </button>
+            <button class="material-icons-outlined">tune</button>
           </li>
         </ul>
       </div>
     </div>
   </body>
+  <script src="cordova.js"></script>
+  <script src="js/index.js"></script>
 </html>
 
 <style>
@@ -93,7 +121,7 @@
   .tabbar {
     background-color: var(--app-content-background-color);
 
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0);
     height: 71px;
     display: flex;
     flex-direction: column;
@@ -364,6 +392,7 @@
 </style>
 
 <script>
+  let activediv = "schedule";
   const uls = document.querySelectorAll("ul");
 
   uls.forEach((ul) => {
@@ -389,6 +418,18 @@
         );
 
         lis.forEach((item) => clearClass(item, "active"));
+
+        const divs = document.querySelectorAll(".container-stage > div");
+        divs.forEach((div) => {
+          document
+            .getElementById(target.getAttribute("data-where"))
+            .setAttribute("style", "display:block");
+
+          document
+            .getElementById(activediv)
+            .setAttribute("style", "display:none");
+          activediv = target.getAttribute("data-where");
+        });
 
         setClass(target, "active");
       });
