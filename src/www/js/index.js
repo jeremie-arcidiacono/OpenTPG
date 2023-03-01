@@ -1,4 +1,4 @@
-import {LocalData} from './inc/localData.js';
+'use strict';
 
 window.addEventListener('load', onLoad);
 

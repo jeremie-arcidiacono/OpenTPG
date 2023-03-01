@@ -1,10 +1,8 @@
 "use strict";
 
-import {Station} from "./station.js";
-
 const REMOTE_STATIONS_FILE_URL = 'https://raw.githubusercontent.com/jeremie-arcidiacono/OpenTPG/main/tpg-data/stations.json';
 
-export class LocalData {
+class LocalData {
 
     /**
      * @param {string} name

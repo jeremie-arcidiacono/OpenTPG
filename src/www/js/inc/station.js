@@ -1,6 +1,6 @@
 "use strict";
 
-export class Station {
+class Station {
 
     /**
      *
