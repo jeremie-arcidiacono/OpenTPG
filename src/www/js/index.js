@@ -1,8 +1,6 @@
-import { Station } from './inc/station.js';
-import { LocalData } from './inc/localData.js';
+import {LocalData} from './inc/localData.js';
 
 window.addEventListener('load', onLoad);
-window.addEventListener('click', onDeviceReady);
 
 function onLoad() {
     document.addEventListener('deviceready', onDeviceReady, false);
@@ -16,11 +14,10 @@ function onDeviceReady() {
 
     if (!networkIsAvailable()) {
         alert('No network connection');
-    }
-    else {
+    } else {
         localData.updateStationStorage()
             .then(() => {
-                
+
             })
             .catch(error => {
                 // Error of the update of the local storage
