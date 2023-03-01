@@ -6,7 +6,7 @@ class LocalData {
 
     /**
      * Get a Station object from the local storage
-     * @param {string} name
+     * @param {string} name The exact name of the station
      * @return {Station|null}
      */
     static getStationByName(name) {
@@ -43,11 +43,10 @@ class LocalData {
     /**
      * Put the stations data from a remote location.
      * If the local data is older than the remote data, update the local data.
-     * @return {Promise<unknown>}
+     * @return {Promise<boolean>} True if the data has been updated
      */
     static updateStationStorage() {
         return new Promise((resolve, reject) => {
-
             // Get the remote file
             fetch(REMOTE_STATIONS_FILE_URL)
                 .then(response => response.json())
@@ -60,12 +59,14 @@ class LocalData {
                         if (localDate < remoteDate) {
                             // Save the data in the local storage
                             localStorage.setItem('stations', JSON.stringify(remoteData));
+                            resolve(true);
                         }
                     } else {
                         // Save the data in the local storage
                         localStorage.setItem('stations', JSON.stringify(remoteData));
+                        resolve(true);
                     }
-                    resolve();
+                    resolve(false);
                 })
                 .catch(error => {
                     reject(error);

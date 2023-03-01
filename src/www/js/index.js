@@ -10,12 +10,10 @@ function onLoad() {
 function onDeviceReady() {
     document.addEventListener('resume', onResume, false);
 
-    let localData = new LocalData();
-
     if (!networkIsAvailable()) {
         alert('No network connection');
     } else {
-        localData.updateStationStorage()
+        LocalData.updateStationStorage()
             .then(() => {
 
             })

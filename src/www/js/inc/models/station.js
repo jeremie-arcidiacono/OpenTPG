@@ -10,10 +10,10 @@ class Station {
      *
      * @param {string} id The id of the station
      * @param {string} name The name of the station
-     * @param {string[]} lines Array of string representing the lines number
+     * @param {string[]|null} lines Array of string representing the lines number (null if unknown)
      * @param {boolean} isFavorite True if the user has marked the station as favorite
      */
-    constructor(id, name, lines, isFavorite = false) {
+    constructor(id, name, lines = null, isFavorite = false) {
         this.id = id;
         this.name = name;
         this.lines = lines;
