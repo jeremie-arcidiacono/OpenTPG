@@ -1,3 +1,9 @@
+import { Station } from './inc/station.js';
+import { LocalData } from './inc/localData.js';
+
+window.addEventListener('load', onLoad);
+window.addEventListener('click', onDeviceReady);
+
 function onLoad() {
     document.addEventListener('deviceready', onDeviceReady, false);
 }
@@ -6,21 +12,35 @@ function onLoad() {
 function onDeviceReady() {
     document.addEventListener('resume', onResume, false);
 
-    ensureNetworkAvailability();
+    let localData = new LocalData();
+
+    if (!networkIsAvailable()) {
+        alert('No network connection');
+    }
+    else {
+        localData.updateStationStorage()
+            .then(() => {
+                
+            })
+            .catch(error => {
+                // Error of the update of the local storage
+            });
+    }
 }
 
 
 function onResume() {
-    ensureNetworkAvailability();
+    if (!networkIsAvailable()) {
+        alert('No network connection');
+    }
 }
 
 
-/*
+/**
  * Check if the network is available.
  * If not, display an alert.
-*/
-function ensureNetworkAvailability() {
-    if (navigator.connection.type == Connection.NONE) {
-        alert('No network connection');
-    }
+ * @returns {boolean}
+ */
+function networkIsAvailable() {
+    return navigator.connection.type !== Connection.NONE;
 }
