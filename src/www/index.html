@@ -6,13 +6,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
   </head>
-  <body onload="onLoad()" style="background-color: #374955">
+  <body style="background-color: #374955">
     <main>
       <div id="schedule" style="display: block">
         <h1>
-          <span class="material-icons-outlined"> schedule </span>
-          <span>schedule</span>
+          <div class="search-box">
+            <input
+              type="text"
+              placeholder="Type to search"
+              class="search-txt"
+            />
+          </div>
         </h1>
+
+        <div class="stop">
+          <div class="text-prox">
+            <h4>A proximité</h4>
+          </div>
+
+          <div class="stop-prox">
+            <div class="bus-stop">
+              <p class="stop-name">Chemin du bac</p>
+              <div class="bus-numbers">
+                <span class="span-bus-number">2</span>
+                <span class="span-bus-number">19</span>
+                <span class="span-bus-number">22</span>
+                <span class="span-bus-number">23</span>
+                <span class="span-bus-number">28</span>
+              </div>
+            </div>
+            <div class="bus-stop">
+              <p class="stop-name">Chemin du bac</p>
+              <div class="bus-numbers">
+                <span class="span-bus-number">2</span>
+                <span class="span-bus-number">19</span>
+                <span class="span-bus-number">22</span>
+                <span class="span-bus-number">23</span>
+                <span class="span-bus-number">28</span>
+              </div>
+            </div>
+            <div class="bus-stop">
+              <p class="stop-name">Chemin du bac</p>
+              <div class="bus-numbers">
+                <span class="span-bus-number">2</span>
+                <span class="span-bus-number">19</span>
+                <span class="span-bus-number">22</span>
+                <span class="span-bus-number">23</span>
+                <span class="span-bus-number">28</span>
+                <span class="span-bus-number">2</span>
+                <span class="span-bus-number">19</span>
+                <span class="span-bus-number">22</span>
+                <span class="span-bus-number">23</span>
+                <span class="span-bus-number">28</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div id="sync_alt" style="display: none">
         <h1>
@@ -53,6 +102,12 @@
     </div>
   </body>
   <script src="cordova.js"></script>
+  <script src="js/inc/models/station.js"></script>
+  <script src="js/inc/models/stop.js"></script>
+  <script src="js/inc/models/bus.js"></script>
+  <script src="js/inc/dataProviders/localData.js"></script>
+  <script src="js/inc/dataProviders/remoteData.js"></script>
+  <script src="js/inc/dataProviders/data.js"></script>
   <script src="js/index.js"></script>
 </html>
 
@@ -260,7 +315,7 @@
     width: 13px;
     height: 13px;
     border-bottom: 4px solid #202a30;
-    top: 8px;
+    top: 9px;
   }
   .tab-style2 .active:before {
     border-bottom-right-radius: 100%;
@@ -388,6 +443,100 @@
     background-color: #202a30;
     border: 2px solid #202a30;
     color: #fcfcfc;
+  }
+
+  .search-box {
+    position: absolute;
+    top: 9%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #2f3640;
+    height: 40px;
+    border-radius: 40px;
+    padding: 7px;
+  }
+  .search-box:hover > .search-txt {
+    width: 310px;
+    padding: 0 6px;
+  }
+
+  .search-txt {
+    border: none;
+    background: none;
+    outline: none;
+    float: left;
+    padding: 0;
+    color: white;
+    font-size: 16px;
+    transition: 0.4s;
+    line-height: 40px;
+    width: 290px;
+    margin-left: 5%;
+  }
+
+  .stop {
+    position: absolute;
+    top: 11%;
+    left: 5%;
+    width: 90%;
+  }
+
+  .text-prox {
+    color: #c2c2c2;
+    font-size: 12px;
+    font-weight: bold;
+    margin-left: 10px;
+  }
+
+  .stop-prox {
+    color: #c2c2c2;
+    font-size: 17px;
+    font-weight: bold;
+    margin-left: 10px;
+    position: relative;
+    top: -5px;
+  }
+
+  .bus-numbers {
+    display: inline-flex;
+    float: right;
+    min-width: 50px;
+    margin-right: 2%;
+    margin-top: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 180px;
+  }
+
+  .span-bus-number {
+    font-size: 13px;
+    color: #fff;
+    background-color: #3498db;
+    padding: 1% 2%;
+    border-radius: 10px;
+    float: right;
+    height: 20px;
+    width: 30px;
+    text-align: center;
+    line-height: 20px;
+    margin-left: 2%;
+    min-width: 25px;
+  }
+
+  .stop-name {
+    display: inline-flex;
+    max-width: 47% !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .bus-stop {
+    border-top: 2px solid #2f3640;
+    padding: 10px;
+    border-top-left-radius: 1px;
+    border-top-right-radius: 1px;
   }
 </style>
 
