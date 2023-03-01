@@ -1,6 +1,10 @@
 "use strict";
 
 class Station {
+    id;
+    name;
+    lines;
+    isFavorite;
 
     /**
      *
@@ -14,5 +18,18 @@ class Station {
         this.name = name;
         this.lines = lines;
         this.isFavorite = isFavorite;
+    }
+
+    /**
+     * Get the name of the station without the region
+     * Example: "Genève, Gare Cornavin" => "Gare Cornavin"
+     * @return {string}
+     */
+    getShortName() {
+
+        if (this.name.includes(',')) {
+            return this.name.split(',')[1];
+        }
+        return this.name;
     }
 }
