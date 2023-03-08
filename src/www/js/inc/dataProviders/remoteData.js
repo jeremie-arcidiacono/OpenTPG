@@ -109,9 +109,9 @@ class RemoteData {
 
     /**
      * Get a list of the nearest stations
-     * @param lat
-     * @param long
-     * @param limit The maximum number of stations to return
+     * @param {number} lat
+     * @param {number} long
+     * @param {number} limit The maximum number of stations to return
      * @return {Promise<Station[]>}
      */
     static getNearbyStations(lat, long, limit = 10) {
@@ -122,17 +122,18 @@ class RemoteData {
                     let stationList = [];
                     data.stations.forEach(currentStation => {
                         if (currentStation.id !== null) {
-                            Data.getStationById(currentStation.id).then(station => {
-                                stationList.push(station);
-                            });
+                            stationList.push(Data.getStationById(currentStation.id));
                         }
                     });
 
-                    if (stationList.length > limit) {
-                        stationList = stationList.slice(0, limit);
-                    }
+                    // We need to wait for all the promises to be resolved before continuing
+                    Promise.all(stationList).then(stationList => {
+                        if (stationList.length > limit) {
+                            stationList = stationList.slice(0, limit);
+                        }
 
-                    resolve(stationList);
+                        resolve(stationList);
+                    })
                 })
                 .catch(error => {
                     reject(error);
