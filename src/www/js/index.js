@@ -20,6 +20,9 @@ function onDeviceReady() {
             .catch(error => {
                 // Error of the update of the local storage
             });
+
+        
+    afficherBus();
     }
 }
 

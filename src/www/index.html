@@ -24,86 +24,12 @@
             <h4>A proximité</h4>
           </div>
 
-          <div class="stop-prox">
-            <div class="bus-stop">
-              <p class="stop-name">Chemin du bac</p>
-              <div class="bus-numbers">
-                <span class="span-bus-number">2</span>
-                <span class="span-bus-number">19</span>
-              </div>
-            </div>
-            <div class="bus-stop">
-              <p class="stop-name">Chemin du bac</p>
-              <div class="bus-numbers">
-                <span class="span-bus-number">2</span>
-                <span class="span-bus-number">19</span>
-                <span class="span-bus-number">22</span>
-              </div>
-            </div>
-            <div class="bus-stop">
-              <p class="stop-name">Chemin du bac</p>
-              <div class="bus-numbers">
-                <span class="span-bus-number">2</span>
-                <span class="span-bus-number">19</span>
-                <span class="span-bus-number">22</span>
-                <span class="span-bus-number">23</span>
-              </div>
-            </div>
-          </div>
+          <div class="stop-prox"></div>
           <div class="text-stop">
             <h4>Favoris</h4>
           </div>
 
-          <div class="stop-prox">
-            <div class="bus-stop">
-              <p class="stop-name">Chemin du bac</p>
-              <div class="bus-numbers">
-                <span class="span-bus-number">2</span>
-                <span class="span-bus-number">19</span>
-                <span class="span-bus-number">22</span>
-                <span class="span-bus-number">19</span>
-                <span class="span-bus-number">22</span>
-              </div>
-            </div>
-            <div class="bus-stop">
-              <p class="stop-name">Chemin du bac</p>
-              <div class="bus-numbers">
-                <span class="span-bus-number">2</span>
-                <span class="span-bus-number">19</span>
-                <span class="span-bus-number">22</span>
-                <span class="span-bus-number">23</span>
-                <span class="span-bus-number">28</span>
-                <span class="span-bus-number">19</span>
-              </div>
-            </div>
-            <div class="bus-stop">
-              <p class="stop-name">Chemin du bac</p>
-              <div class="bus-numbers">
-                <span class="span-bus-number">2</span>
-                <span class="span-bus-number">19</span>
-                <span class="span-bus-number">22</span>
-                <span class="span-bus-number">23</span>
-                <span class="span-bus-number">28</span>
-                <span class="span-bus-number">2</span>
-                <span class="span-bus-number">19</span>
-                <span class="span-bus-number">22</span>
-                <span class="span-bus-number">23</span>
-                <span class="span-bus-number">28</span>
-              </div>
-            </div>
-            <div class="bus-stop">
-              <p class="stop-name">Chemin du bac</p>
-              <div class="bus-numbers">
-                <span class="span-bus-number">2</span>
-                <span class="span-bus-number">19</span>
-                <span class="span-bus-number">22</span>
-                <span class="span-bus-number">23</span>
-                <span class="span-bus-number">28</span>
-                <span class="span-bus-number">2</span>
-                <span class="span-bus-number">19</span>
-              </div>
-            </div>
-          </div>
+          <div class="stop-prox"></div>
         </div>
       </div>
       <div id="sync_alt" style="display: none">
@@ -585,6 +511,12 @@
     border-top-right-radius: 1px;
     position: relative;
     overflow: hidden;
+    margin-bottom: 14px;
+  }
+
+  .bus-stop:hover {
+    transform: scale(1.03);
+    transition: 0.3s;
   }
 </style>
 
@@ -640,4 +572,45 @@
   function setClass(node, className) {
     node.classList.add(className);
   }
+
+  function afficherBus() {
+    Data.getNearbyStations(5)
+      .then((stations) => {
+        stations.forEach((station) => {
+          // créer une nouvelle div pour la station
+          var divStation = document.createElement("div");
+          divStation.classList.add("bus-stop");
+
+          // ajouter le nom de la station à la div
+          var nomStation = document.createElement("p");
+          nomStation.classList.add("stop-name");
+          nomStation.textContent = station.getShortName();
+          divStation.appendChild(nomStation);
+
+          // ajouter l'ID de la station à la div
+          var idStation = document.createElement("div");
+          idStation.setAttribute("id", station.id);
+          divStation.appendChild(idStation);
+
+          // ajouter les lignes de bus à la div
+          var divBus = document.createElement("div");
+          divBus.classList.add("bus-numbers");
+          for (var i = 0; i < station.lines.length; i++) {
+            var spanBus = document.createElement("span");
+            spanBus.classList.add("span-bus-number");
+            spanBus.textContent = station.lines[i];
+            divBus.appendChild(spanBus);
+          }
+          divStation.appendChild(divBus);
+
+          // ajouter la div de la station à la page
+          var divProx = document.querySelector(".stop-prox");
+          divProx.appendChild(divStation);
+        });
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  }
+
 </script>
