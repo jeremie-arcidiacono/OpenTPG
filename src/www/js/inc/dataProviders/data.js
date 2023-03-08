@@ -81,7 +81,7 @@ class Data {
 
     /**
      * Get a list of the nearest stations from the current position
-     * @param limit The maximum number of results (default: 10)
+     * @param {number} limit The maximum number of results (default: 10)
      * @return {Promise<Station[]>}
      */
     static getNearbyStations(limit = 10) {
@@ -103,6 +103,14 @@ class Data {
                 }
             );
         });
+    }
+
+    /**
+     * Get the list of stations marked as favorite by the user
+     * @return {Station[]}
+     */
+    static getFavoriteStations() {
+        return LocalData.getFavoriteStations();
     }
 
 }

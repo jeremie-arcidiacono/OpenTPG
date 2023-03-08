@@ -4,7 +4,7 @@ class Station {
     id;
     name;
     lines;
-    isFavorite;
+    #isFavorite;
 
     /**
      *
@@ -17,7 +17,7 @@ class Station {
         this.id = id;
         this.name = name;
         this.lines = lines;
-        this.isFavorite = isFavorite;
+        this.#isFavorite = isFavorite;
     }
 
     /**
@@ -39,5 +39,23 @@ class Station {
         newName = newName.charAt(0).toUpperCase() + newName.slice(1);
 
         return newName;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    getIsFavorite() {
+        return this.#isFavorite;
+    }
+
+    /**
+     * Set the station as favorite or not (and update the local storage)
+     * @param {boolean} isFavorite
+     */
+    setIsFavorite(isFavorite) {
+        this.#isFavorite = isFavorite;
+
+        // Update the local storage
+        LocalData.setFavoriteStation(this.id, isFavorite);
     }
 }
