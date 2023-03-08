@@ -26,10 +26,18 @@ class Station {
      * @return {string}
      */
     getShortName() {
-
+        let newName;
         if (this.name.includes(',')) {
-            return this.name.split(',')[1];
+            newName = this.name.split(',')[1];
+        } else {
+            newName = this.name;
         }
-        return this.name;
+
+        newName = newName.trim();
+
+        // Put the first letter in uppercase
+        newName = newName.charAt(0).toUpperCase() + newName.slice(1);
+
+        return newName;
     }
 }
