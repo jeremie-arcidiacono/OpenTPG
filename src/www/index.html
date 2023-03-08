@@ -20,7 +20,7 @@
         </h1>
 
         <div class="stop">
-          <div class="text-prox">
+          <div class="text-stop">
             <h4>A proximité</h4>
           </div>
 
@@ -30,6 +30,62 @@
               <div class="bus-numbers">
                 <span class="span-bus-number">2</span>
                 <span class="span-bus-number">19</span>
+              </div>
+            </div>
+            <div class="bus-stop">
+              <p class="stop-name">Chemin du bac</p>
+              <div class="bus-numbers">
+                <span class="span-bus-number">2</span>
+                <span class="span-bus-number">19</span>
+                <span class="span-bus-number">22</span>
+              </div>
+            </div>
+            <div class="bus-stop">
+              <p class="stop-name">Chemin du bac</p>
+              <div class="bus-numbers">
+                <span class="span-bus-number">2</span>
+                <span class="span-bus-number">19</span>
+                <span class="span-bus-number">22</span>
+                <span class="span-bus-number">23</span>
+              </div>
+            </div>
+          </div>
+          <div class="text-stop">
+            <h4>Favoris</h4>
+          </div>
+
+          <div class="stop-prox">
+            <div class="bus-stop">
+              <p class="stop-name">Chemin du bac</p>
+              <div class="bus-numbers">
+                <span class="span-bus-number">2</span>
+                <span class="span-bus-number">19</span>
+                <span class="span-bus-number">22</span>
+                <span class="span-bus-number">19</span>
+                <span class="span-bus-number">22</span>
+              </div>
+            </div>
+            <div class="bus-stop">
+              <p class="stop-name">Chemin du bac</p>
+              <div class="bus-numbers">
+                <span class="span-bus-number">2</span>
+                <span class="span-bus-number">19</span>
+                <span class="span-bus-number">22</span>
+                <span class="span-bus-number">23</span>
+                <span class="span-bus-number">28</span>
+                <span class="span-bus-number">19</span>
+              </div>
+            </div>
+            <div class="bus-stop">
+              <p class="stop-name">Chemin du bac</p>
+              <div class="bus-numbers">
+                <span class="span-bus-number">2</span>
+                <span class="span-bus-number">19</span>
+                <span class="span-bus-number">22</span>
+                <span class="span-bus-number">23</span>
+                <span class="span-bus-number">28</span>
+                <span class="span-bus-number">2</span>
+                <span class="span-bus-number">19</span>
                 <span class="span-bus-number">22</span>
                 <span class="span-bus-number">23</span>
                 <span class="span-bus-number">28</span>
@@ -43,21 +99,8 @@
                 <span class="span-bus-number">22</span>
                 <span class="span-bus-number">23</span>
                 <span class="span-bus-number">28</span>
-              </div>
-            </div>
-            <div class="bus-stop">
-              <p class="stop-name">Chemin du bac</p>
-              <div class="bus-numbers">
                 <span class="span-bus-number">2</span>
                 <span class="span-bus-number">19</span>
-                <span class="span-bus-number">22</span>
-                <span class="span-bus-number">23</span>
-                <span class="span-bus-number">28</span>
-                <span class="span-bus-number">2</span>
-                <span class="span-bus-number">19</span>
-                <span class="span-bus-number">22</span>
-                <span class="span-bus-number">23</span>
-                <span class="span-bus-number">28</span>
               </div>
             </div>
           </div>
@@ -481,7 +524,7 @@
     width: 90%;
   }
 
-  .text-prox {
+  .text-stop {
     color: #c2c2c2;
     font-size: 12px;
     font-weight: bold;
@@ -500,13 +543,14 @@
   .bus-numbers {
     display: inline-flex;
     float: right;
-    min-width: 50px;
+    min-width: 177px;
     margin-right: 2%;
     margin-top: 16px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: 180px;
+    max-width: 160px;
+    justify-content: end;
   }
 
   .span-bus-number {
@@ -526,7 +570,7 @@
 
   .stop-name {
     display: inline-flex;
-    max-width: 47% !important;
+    max-width: 43% !important;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
