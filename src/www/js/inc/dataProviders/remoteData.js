@@ -122,7 +122,9 @@ class RemoteData {
                     let stationList = [];
                     data.stations.forEach(currentStation => {
                         if (currentStation.id !== null) {
-                            stationList.push(new Station(currentStation.id, currentStation.name, null));
+                            Data.getStationById(currentStation.id).then(station => {
+                                stationList.push(station);
+                            });
                         }
                     });
 
