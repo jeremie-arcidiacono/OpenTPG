@@ -28,6 +28,30 @@ class LocalData {
     }
 
     /**
+     * Search a station by its name (or part of its name)
+     * @param {string} name The name (or part of the name) of the station
+     * @param {number} limit The maximum number of results
+     * @return {Station[]} The list of stations found (empty if none)
+     */
+    static getStationByPartialName(name, limit) {
+        name = name.toLowerCase();
+
+        let stations = JSON.parse(localStorage.getItem('stations'))["stations"];
+
+        let stationsArray = Object.keys(stations).map(function (key) {
+            return [key, stations[key]];
+        });
+
+        let stationsFound = stationsArray.filter(station => station[1].name.toLowerCase().includes(name));
+
+        if (stationsFound.length > limit) {
+            stationsFound = stationsFound.slice(0, limit);
+        }
+
+        return stationsFound.map(station => new Station(station[0], station[1].name, station[1].lines));
+    }
+
+    /**
      * Get a Station object from the local storage
      * @param {string} id
      * @return {Station|null}

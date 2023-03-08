@@ -36,6 +36,17 @@ class Data {
     }
 
     /**
+     * Search a station by its name (or part of its name)
+     * Only search in the local storage for performance reasons
+     * @param {string} name The name (or part of the name) of the station
+     * @param {number} limit The maximum number of results (default: 10)
+     * @return {Station[]} The list of stations found (empty if none)
+     */
+    static getStationByPartialName(name, limit = 10) {
+        return LocalData.getStationByPartialName(name, limit);
+    }
+
+    /**
      * Get a Station object from the localStorage or the API
      * @param {string} id
      * @return {Promise<Station>} The station found or reject the promise if the station is not found
