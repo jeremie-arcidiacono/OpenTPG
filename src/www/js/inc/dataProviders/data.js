@@ -79,4 +79,30 @@ class Data {
         return RemoteData.getStationboard(station, limit);
     }
 
+    /**
+     * Get a list of the nearest stations from the current position
+     * @param limit The maximum number of results (default: 10)
+     * @return {Promise<Station[]>}
+     */
+    static getNearbyStations(limit = 10) {
+        return new Promise((resolve, reject) => {
+            // Get the current position
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    // Get the list of nearby stations
+                    RemoteData.getNearbyStations(position.coords.latitude, position.coords.longitude, limit)
+                        .then(stations => {
+                            resolve(stations);
+                        })
+                        .catch(error => {
+                            reject(error);
+                        });
+                },
+                error => {
+                    reject(error);
+                }
+            );
+        });
+    }
+
 }

@@ -106,4 +106,35 @@ class RemoteData {
                 });
         });
     }
+
+    /**
+     * Get a list of the nearest stations
+     * @param lat
+     * @param long
+     * @param limit The maximum number of stations to return
+     * @return {Promise<Station[]>}
+     */
+    static getNearbyStations(lat, long, limit = 10) {
+        return new Promise((resolve, reject) => {
+            fetch(API_URL + 'locations?x=' + lat + '&y=' + long + '&type=station')
+                .then(response => response.json())
+                .then(data => {
+                    let stationList = [];
+                    data.stations.forEach(currentStation => {
+                        if (currentStation.id !== null) {
+                            stationList.push(new Station(currentStation.id, currentStation.name, null));
+                        }
+                    });
+
+                    if (stationList.length > limit) {
+                        stationList = stationList.slice(0, limit);
+                    }
+
+                    resolve(stationList);
+                })
+                .catch(error => {
+                    reject(error);
+                });
+        });
+    }
 }
