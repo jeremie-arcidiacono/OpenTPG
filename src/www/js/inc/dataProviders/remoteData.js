@@ -5,8 +5,10 @@ const API_URL = 'https://transport.opendata.ch/v1/';
 class RemoteData {
 
     /**
+     * Get a list of bus which will stop at the station
      * @param {Station} station
      * @param {number} limit
+     * @return {Promise<Bus[]>}
      */
     static getStationboard(station, limit = 32) {
         return new Promise((resolve, reject) => {
@@ -16,23 +18,37 @@ class RemoteData {
                     let busList = [];
                     data.stationboard.forEach(bus => {
                         let nextStop = [];
-                        nextStop.push(new Stop(station, new Date(bus.stop.prognosis.departure)));
+
+                        let time = bus.stop.prognosis.departure;
+                        if (time === null) {
+                            time = bus.stop.departure;
+                            if (bus.stop.delay !== null) {
+                                time = time.getTime() + bus.stop.delay * 1000
+                            }
+                        }
+                        nextStop.push(new Stop(station, new Date(time)));
 
                         bus.passList.forEach(stop => {
                             if (stop.station.name !== null) {
-                                let currentStation = null;
+                                let currentStationPromise;
                                 if (stop.station.id !== null) {
-                                    currentStation = Data.getStationById(stop.station.id)
+                                    currentStationPromise = Data.getStationById(stop.station.id)
+
                                 } else {
-                                    currentStation = Data.getStationByName(stop.station.name)
+                                    currentStationPromise = Data.getStationByName(stop.station.name)
                                 }
-                                let time = stop.prognosis.departure;
-                                if (time === null) {
-                                    time = stop.prognosis.arrival;
-                                }
-                                nextStop.push(new Stop(currentStation, new Date(time)));
+                                currentStationPromise.then(currentStation => {
+                                    let time = stop.prognosis.departure;
+                                    if (time === null) {
+                                        time = stop.prognosis.arrival;
+                                    }
+                                    nextStop.push(new Stop(currentStation, new Date(time)));
+                                });
                             }
                         });
+                        if (bus.number.startsWith('T ')) {
+                            bus.number = bus.number.replace('T ', '');
+                        }
                         busList.push(new Bus(bus.number, nextStop));
                     });
                     resolve(busList);
@@ -44,49 +60,50 @@ class RemoteData {
     }
 
     /**
-     * Get a Station object from the API
+     * Get a Station object from the API.
      * @param {string} name The name (or part of the name) of the station
-     * @return {Station|null}
+     * @return {Promise<Station>} The station found or reject the promise if the station is not found
      */
     static getStationByName(name) {
+        return new Promise((resolve, reject) => {
+            fetch(API_URL + 'locations?query=' + name)
+                .then(response => response.json())
+                .then(data => {
+                    data.stations.forEach(currentStation => {
+                        if (currentStation.id !== null) {
+                            resolve(new Station(currentStation.id, currentStation.name, null));
+                        }
+                    });
 
-        fetch(API_URL + 'locations?query=' + name)
-            .then(response => response.json())
-            .then(data => {
-                let station = null;
-                data.stations.forEach(currentStation => {
-                    if (station === null && currentStation.id !== null) {
-                        station = new Station(currentStation.id, currentStation.name, null);
-                    }
+                    reject('Station not found');
+                })
+                .catch(error => {
+                    reject(error);
                 });
-
-                return (station);
-            })
-            .catch(error => {
-                return null;
-            });
+        });
     }
 
     /**
      * Get a Station object from the API
      * @param {string} id
-     * @return {Station|null}
+     * @return {Promise<Station>} The station found or reject the promise if the station is not found
      */
     static getStationById(id) {
-        fetch(API_URL + 'locations?query=' + id)
-            .then(response => response.json())
-            .then(data => {
-                let station = null;
-                data.stations.forEach(currentStation => {
-                    if (station === null && currentStation.id !== null) {
-                        station = new Station(currentStation.id, currentStation.name, null);
-                    }
-                });
+        return new Promise((resolve, reject) => {
+            fetch(API_URL + 'locations?id=' + id)
+                .then(response => response.json())
+                .then(data => {
+                    data.stations.forEach(currentStation => {
+                        if (currentStation.id !== null) {
+                            resolve(new Station(currentStation.id, currentStation.name, null));
+                        }
+                    });
 
-                return (station);
-            })
-            .catch(error => {
-                return null;
-            });
+                    reject('Station not found');
+                })
+                .catch(error => {
+                    reject(error);
+                });
+        });
     }
 }

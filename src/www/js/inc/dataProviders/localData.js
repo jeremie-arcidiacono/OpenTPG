@@ -10,6 +10,8 @@ class LocalData {
      * @return {Station|null}
      */
     static getStationByName(name) {
+        name = name.toLowerCase();
+
         let stations = JSON.parse(localStorage.getItem('stations'))["stations"];
 
         // Convert the stations object to an array
@@ -17,9 +19,9 @@ class LocalData {
             return [key, stations[key]];
         });
 
-        let station = stationsArray.find(station => station[1].name === name);
+        let station = stationsArray.find(station => station[1].name.toLowerCase() === name);
 
-        if (station !== null) {
+        if (station !== null && station !== undefined) {
             return new Station(station[0], station[1].name, station[1].lines);
         }
         return null;
@@ -33,7 +35,7 @@ class LocalData {
     static getStationById(id) {
         let stations = JSON.parse(localStorage.getItem('stations'))["stations"];
 
-        if (stations[id] !== null) {
+        if (stations[id] !== null && stations[id] !== undefined) {
             return new Station(id, stations[id].name, stations[id].lines);
         } else {
             return null;
@@ -51,7 +53,7 @@ class LocalData {
             fetch(REMOTE_STATIONS_FILE_URL)
                 .then(response => response.json())
                 .then(remoteData => {
-                    if (localStorage.getItem('stations') !== null) {
+                    if (localStorage.getItem('stations') !== null && localStorage.getItem('stations') !== undefined) {
                         let localDate = JSON.parse(localStorage.getItem('stations'))["date"];
                         let remoteDate = remoteData["date"];
 

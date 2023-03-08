@@ -9,47 +9,62 @@ class Data {
     /**
      * Get a Station object from the localStorage or the API
      * @param {string} name
-     * @return {Station|null} Null if the station is not found
+     * @return {Promise<Station>} The station found or reject the promise if the station is not found
      */
-    static getStationByName(name){
-        let station = LocalData.getStationByName(name);
+    static getStationByName(name) {
+        return new Promise((resolve, reject) => {
+            let station = LocalData.getStationByName(name);
 
-        if(station === null){
-            station = RemoteData.getStationByName(name);
-
-            // Try to get the lines from the local storage
-            let localStation = LocalData.getStationById(station.id);
-            if (localStation !== null){
-                station.lines = localStation.lines;
+            if (station === null) {
+                // stop the execution of the function until the promise is resolved
+                RemoteData.getStationByName(name)
+                    .then(station => {
+                        // Try to get the lines from the local storage
+                        let localStation = LocalData.getStationById(station.id);
+                        if (localStation !== null) {
+                            station.lines = localStation.lines;
+                        }
+                        resolve(station);
+                    })
+                    .catch(error => {
+                        reject(error);
+                    });
+            } else {
+                resolve(station);
             }
-        }
-
-        return station;
+        });
     }
 
     /**
      * Get a Station object from the localStorage or the API
      * @param {string} id
-     * @return {Station|null} Null if the station is not found
+     * @return {Promise<Station>} The station found or reject the promise if the station is not found
      */
-    static getStationById(id){
-        let station = LocalData.getStationById(id);
+    static getStationById(id) {
+        return new Promise((resolve, reject) => {
+            let station = LocalData.getStationById(id);
 
-        if(station === null){
-            station = RemoteData.getStationById(id);
-            // The station is not in the local storage, so we can't get the lines
-        }
-
-        return station;
+            if (station === null) {
+                RemoteData.getStationById(id)
+                    .then(station => {
+                        resolve(station);
+                    })
+                    .catch(error => {
+                        reject(error);
+                    });
+            } else {
+                resolve(station);
+            }
+        });
     }
 
     /**
-     * Get the next buses for a station
+     * Get a list of bus which will stop at the station
      * @param {Station} station
      * @param {number} limit
      * @return {Promise<Bus[]>}
      */
-    static getStationboard(station, limit = 32){
+    static getStationboard(station, limit = 32) {
         return RemoteData.getStationboard(station, limit);
     }
 
