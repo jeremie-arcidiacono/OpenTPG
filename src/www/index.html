@@ -18,19 +18,7 @@
             />
           </div>
         </h1>
-
-        <div class="stop">
-          <div class="text-stop">
-            <h4>A proximité</h4>
-          </div>
-
-          <div class="stop-prox"></div>
-          <div class="text-stop">
-            <h4>Favoris</h4>
-          </div>
-
-          <div class="stop-prox"></div>
-        </div>
+        <div class="stop" id="stop"></div>
       </div>
       <div id="sync_alt" style="display: none">
         <h1>
@@ -448,6 +436,16 @@
     top: 11%;
     left: 5%;
     width: 90%;
+    padding-bottom: 60px;
+  }
+
+  .stop-fav {
+    color: #c2c2c2;
+    font-size: 17px;
+    font-weight: bold;
+    margin-left: 10px;
+    position: relative;
+    top: -5px;
   }
 
   .text-stop {
@@ -512,6 +510,7 @@
     position: relative;
     overflow: hidden;
     margin-bottom: 14px;
+    transition: transform 0.5s ease-out;
   }
 
   .bus-stop:hover {
@@ -576,41 +575,106 @@
   function afficherBus() {
     Data.getNearbyStations(5)
       .then((stations) => {
-        stations.forEach((station) => {
-          // créer une nouvelle div pour la station
-          var divStation = document.createElement("div");
-          divStation.classList.add("bus-stop");
+        if (stations.length == 0) {
+          alert("Aucune station de bus à proximité");
+        } else {
+          var divTextProx = document.createElement("div");
+          divTextProx.classList.add("text-stop");
+          var h4Prox = document.createElement("h4");
+          h4Prox.textContent = "A proximité";
+          divTextProx.appendChild(h4Prox);
+          document.getElementById("stop").appendChild(divTextProx);
 
-          // ajouter le nom de la station à la div
-          var nomStation = document.createElement("p");
-          nomStation.classList.add("stop-name");
-          nomStation.textContent = station.getShortName();
-          divStation.appendChild(nomStation);
+          var divStop = document.createElement("div");
+          divStop.classList.add("stop-prox");
+          document.getElementById("stop").appendChild(divStop);
 
-          // ajouter l'ID de la station à la div
-          var idStation = document.createElement("div");
-          idStation.setAttribute("id", station.id);
-          divStation.appendChild(idStation);
+          stations.forEach((station) => {
+            // créer une nouvelle div pour la station
+            var divStation = document.createElement("div");
+            divStation.classList.add("bus-stop");
 
-          // ajouter les lignes de bus à la div
-          var divBus = document.createElement("div");
-          divBus.classList.add("bus-numbers");
-          for (var i = 0; i < station.lines.length; i++) {
-            var spanBus = document.createElement("span");
-            spanBus.classList.add("span-bus-number");
-            spanBus.textContent = station.lines[i];
-            divBus.appendChild(spanBus);
-          }
-          divStation.appendChild(divBus);
+            // ajouter le nom de la station à la div
+            var nomStation = document.createElement("p");
+            nomStation.classList.add("stop-name");
+            nomStation.textContent = station.getShortName();
+            divStation.appendChild(nomStation);
 
-          // ajouter la div de la station à la page
-          var divProx = document.querySelector(".stop-prox");
-          divProx.appendChild(divStation);
-        });
+            // ajouter l'ID de la station à la div
+            var idStation = document.createElement("div");
+            idStation.setAttribute("id", station.id);
+            divStation.appendChild(idStation);
+
+            // ajouter les lignes de bus à la div
+            var divBus = document.createElement("div");
+            divBus.classList.add("bus-numbers");
+            for (var i = 0; i < station.lines.length; i++) {
+              var spanBus = document.createElement("span");
+              spanBus.classList.add("span-bus-number");
+              spanBus.textContent = station.lines[i];
+              divBus.appendChild(spanBus);
+            }
+            divStation.appendChild(divBus);
+
+            // ajouter la div de la station à la page
+            var divProx = document.querySelector(".stop-prox");
+            divProx.appendChild(divStation);
+          });
+        }
+
+        let FavStations = Data.getFavoriteStations();
+
+        if (FavStations != null) {
+          var divTextFav = document.createElement("div");
+          divTextFav.classList.add("text-stop");
+          var h4Fav = document.createElement("h4");
+          h4Fav.textContent = "Favoris";
+          divTextFav.appendChild(h4Fav);
+          document.getElementById("stop").appendChild(divTextFav);
+
+          var divStop = document.createElement("div");
+          divStop.classList.add("stop-fav");
+          document.getElementById("stop").appendChild(divStop);
+
+          FavStations.forEach((station) => {
+            // créer une nouvelle div pour la station
+            var divStation = document.createElement("div");
+            divStation.classList.add("bus-stop");
+
+            // ajouter le nom de la station à la div
+            var nomStation = document.createElement("p");
+            nomStation.classList.add("stop-name");
+            nomStation.textContent = station.getShortName();
+            divStation.appendChild(nomStation);
+
+            // ajouter l'ID de la station à la div
+            var idStation = document.createElement("div");
+            idStation.setAttribute("id", station.id);
+            divStation.appendChild(idStation);
+
+            // ajouter les lignes de bus à la div
+            var divBus = document.createElement("div");
+            divBus.classList.add("bus-numbers");
+            for (var i = 0; i < station.lines.length; i++) {
+              var spanBus = document.createElement("span");
+              spanBus.classList.add("span-bus-number");
+              spanBus.textContent = station.lines[i];
+              divBus.appendChild(spanBus);
+            }
+            divStation.appendChild(divBus);
+
+            // ajouter la div de la station à la page
+            var divFav = document.querySelector(".stop-fav");
+            divFav.appendChild(divStation);
+          });
+        }
       })
       .catch((error) => {
         alert(error);
       });
   }
 
+  function initDisplay() {
+    afficherBus();
+  }
 </script>
