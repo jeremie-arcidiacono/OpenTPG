@@ -15,8 +15,7 @@ function onDeviceReady() {
     } else {
         LocalData.updateLocalStorage()
             .then(() => {
-                // Before displaying the data, we try to send a random request to the API to check if the data is
-                // available
+                // Before displaying the data, we try to send a random request to the API to check if the data is available
                 Data.getStationById('8592978') // Station Chemin du Bac
                     .catch(error => {
                         alert('Impossible de recevoir les données en temps réel. Veuillez réessayer plus tard.');

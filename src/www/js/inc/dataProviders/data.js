@@ -1,4 +1,5 @@
 "use strict";
+
 /**
  * Authors : Grégoire Péan & Jérémie Arcidiacono
  * Date : January - March 2023
@@ -126,4 +127,16 @@ class Data {
         return LocalData.getFavoriteStations();
     }
 
+    /**
+     * Get a list of connections (one or more journeys) between two stations
+     * @param {Station} from
+     * @param {Station} to
+     * @param {Date} datetime
+     * @param {boolean} isArrivalTime If true, the datetime parameter will be used as the arrival time
+     * @param {number} limit The maximum number of connections to return
+     * @return {Promise<Connection[]>}
+     */
+    static getConnections(from, to, datetime = new Date(), isArrivalTime = false, limit = 6) {
+        return RemoteData.getConnections(from, to, datetime, isArrivalTime, limit);
+    }
 }

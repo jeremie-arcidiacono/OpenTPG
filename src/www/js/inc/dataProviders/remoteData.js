@@ -16,10 +16,11 @@ class RemoteData {
     /**
      * Get a list of bus which will stop at the station
      * @param {Station} station
-     * @param {number} limit
+     * @param {number} limit The maximum number of bus to return
+     * @param {number} maxTimeLimit The maximum time to wait for a bus (in minutes)
      * @return {Promise<Bus[]>}
      */
-    static getStationboard(station, limit = 32) {
+    static getStationboard(station, limit = 32, maxTimeLimit = 60) {
         return new Promise((resolve, reject) => {
             fetch(API_URL + 'stationboard?id=' + station.id + '&limit=' + limit)
                 .then(response => response.json())
@@ -39,6 +40,14 @@ class RemoteData {
 
                         bus.passList.forEach(stop => {
                             if (stop.station.name !== null) {
+                                let time = stop.prognosis.departure;
+                                if (time === null) {
+                                    time = stop.prognosis.arrival;
+                                }
+                                if (new Date(time).getTime() - new Date().getTime() > maxTimeLimit * 60 * 1000) {
+                                    return; // We don't want to display bus which will arrive in more than {maxTimeLimit} minutes
+                                }
+
                                 let currentStationPromise;
                                 if (stop.station.id !== null) {
                                     currentStationPromise = Data.getStationById(stop.station.id)
@@ -47,10 +56,6 @@ class RemoteData {
                                     currentStationPromise = Data.getStationByName(stop.station.name)
                                 }
                                 currentStationPromise.then(currentStation => {
-                                    let time = stop.prognosis.departure;
-                                    if (time === null) {
-                                        time = stop.prognosis.arrival;
-                                    }
                                     nextStop.push(new Stop(currentStation, new Date(time)));
                                 });
                             }
@@ -60,8 +65,7 @@ class RemoteData {
                                 bus.number = bus.number.replace('T ', '');
                             }
                             busList.push(new Bus(LocalData.getLineByName(bus.number), nextStop));
-                        }
-                        else {
+                        } else {
                             // Sometimes the API doesn't return the bus number
                             // It's weird but the number can be found in the 'category' field (sometimes)
                             if (bus.category !== null) {
@@ -70,7 +74,6 @@ class RemoteData {
                                 }
                                 busList.push(new Bus(LocalData.getLineByName(bus.category), nextStop));
                             }
-
                             // If the number is not found in the 'category' field, we ignore the bus
                         }
                     });
@@ -157,6 +160,58 @@ class RemoteData {
 
                         resolve(stationList);
                     })
+                })
+                .catch(error => {
+                    reject(error);
+                });
+        });
+    }
+
+    /**
+     * Get a list of connections (one or more journeys) between two stations
+     * @param {Station} from
+     * @param {Station} to
+     * @param {Date} datetime
+     * @param {boolean} isArrivalTime If true, the datetime parameter will be used as the arrival time
+     * @param {number} limit The maximum number of connections to return
+     * @return {Promise<Connection[]>}
+     */
+    static getConnections(from, to, datetime = new Date(), isArrivalTime = false, limit = 6) {
+        return new Promise((resolve, reject) => {
+            let date = datetime.toISOString().split('T')[0];
+            let time = datetime.toISOString().split('T')[1].split('.')[0];
+            fetch(API_URL + 'connections?from=' + from.id + '&to=' + to.id + '&date=' + date + '&time=' + time + '&isArrivalTime=' + isArrivalTime + '&limit=' + limit)
+                .then(response => response.json())
+                .then(data => {
+                    let connectionList = [];
+                    let promises = []; // Create an array to hold all the promises
+
+                    data.connections.forEach(connection => {
+                        let journeyList = [];
+                        connection.sections.forEach(section => {
+                            let departureStationPromise = Data.getStationById(section.departure.station.id);
+                            let arrivalStationPromise = Data.getStationById(section.arrival.station.id);
+
+                            promises.push(Promise.all([departureStationPromise, arrivalStationPromise]).then(stations => {
+                                let lineNumber = section.journey.number;
+
+                                if (lineNumber.startsWith('T ')) {
+                                    lineNumber = lineNumber.replace('T ', '');
+                                }
+
+                                journeyList.push(new Journey(
+                                    new Stop(stations[0], new Date(section.departure.departure)),
+                                    new Stop(stations[1], new Date(section.arrival.arrival)),
+                                    LocalData.getLineByName(lineNumber)));
+                            }));
+                        });
+                        connectionList.push(new Connection(journeyList));
+                    });
+
+                    // We need to wait for all the promises to be resolved before continuing
+                    Promise.all(promises).then(() => {
+                        resolve(connectionList);
+                    });
                 })
                 .catch(error => {
                     reject(error);
