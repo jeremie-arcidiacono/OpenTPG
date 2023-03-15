@@ -481,8 +481,6 @@
 
   .span-bus-number {
     font-size: 13px;
-    color: #fff;
-    background-color: #3498db;
     padding: 1% 2%;
     border-radius: 10px;
     float: right;
@@ -522,114 +520,8 @@
 </style>
 
 <script>
-  let search = document.getElementById("search");
-
-  search.addEventListener("keyup", (e) => {
-    if (search.value == "") {
-      ScheduleDisplay();
-    } else {
-      Clear();
-      let stations = Data.getStationByPartialName(search.value, (limit = 20));
-
-      let divTextProx = document.createElement("div");
-      divTextProx.classList.add("text-stop");
-      let h4Prox = document.createElement("h4");
-      h4Prox.textContent = "Recherche";
-      divTextProx.appendChild(h4Prox);
-      document.getElementById("stop").appendChild(divTextProx);
-
-      let divStop = document.createElement("div");
-      divStop.classList.add("stop-prox");
-      document.getElementById("stop").appendChild(divStop);
-
-      stations.forEach((station) => {
-        // créer une nouvelle div pour la station
-        let divStation = document.createElement("div");
-        divStation.classList.add("bus-stop");
-
-        // ajouter le nom de la station à la div
-        let nomStation = document.createElement("p");
-        nomStation.classList.add("stop-name");
-        nomStation.textContent = station.getShortName();
-        divStation.appendChild(nomStation);
-
-        // ajouter l'ID de la station à la div
-        let idStation = document.createElement("div");
-        idStation.setAttribute("id", station.id);
-        divStation.appendChild(idStation);
-
-        // ajouter les lignes de bus à la div
-        let divBus = document.createElement("div");
-        divBus.classList.add("bus-numbers");
-        for (let i = 0; i < station.lines.length; i++) {
-          let spanBus = document.createElement("span");
-          spanBus.classList.add("span-bus-number");
-          spanBus.textContent = station.lines[i].getFormattedName();
-          divBus.appendChild(spanBus);
-        }
-        divStation.appendChild(divBus);
-
-        // ajouter la div de la station à la page
-        let divProx = document.querySelector(".stop-prox");
-        divProx.appendChild(divStation);
-      });
-    }
-  });
-
-  let activediv = "schedule";
-  const uls = document.querySelectorAll("ul");
-
-  uls.forEach((ul) => {
-    const resetClass = ul.parentNode.getAttribute("class");
-    const lis = ul.querySelectorAll("li");
-    lis.forEach((li) => {
-      li.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const target = e.currentTarget;
-        const where = target.getAttribute("data-where");
-
-        if (where == "schedule") {
-          ScheduleDisplay();
-        } else if (where == "sync_alt") {
-        } else if (where == "bus_alert") {
-        } else if (where == "tune") {
-        }
-
-        if (
-          target.classList.contains("active") ||
-          target.classList.contains("follow")
-        ) {
-          return;
-        }
-
-        ul.parentNode.setAttribute(
-          "class",
-          `${resetClass} ${target.getAttribute("data-where")}-style`
-        );
-
-        lis.forEach((item) => clearClass(item, "active"));
-
-        const divs = document.querySelectorAll(".container-stage > div");
-        divs.forEach((div) => {
-          document
-            .getElementById(target.getAttribute("data-where"))
-            .setAttribute("style", "display:block");
-
-          document
-            .getElementById(activediv)
-            .setAttribute("style", "display:none");
-          activediv = target.getAttribute("data-where");
-        });
-
-        setClass(target, "active");
-      });
-    });
-  });
-
   function clearClass(node, className) {
     node.classList.remove(className);
-    document.getElementById("search").value = "";
   }
 
   function setClass(node, className) {
@@ -641,7 +533,7 @@
       .then((stations) => {
         if (stations.length == 0) {
           alert("Aucune station de bus à proximité");
-        } else if(document.getElementById("search").value == "") {
+        } else if (document.getElementById("search").value == "") {
           Clear();
 
           let divTextProx = document.createElement("div");
@@ -659,6 +551,9 @@
             // créer une nouvelle div pour la station
             let divStation = document.createElement("div");
             divStation.classList.add("bus-stop");
+            divStation.onclick = function () {
+              //ClearAll();
+            };
 
             // ajouter le nom de la station à la div
             let nomStation = document.createElement("p");
@@ -677,6 +572,9 @@
             for (let i = 0; i < station.lines.length; i++) {
               let spanBus = document.createElement("span");
               spanBus.classList.add("span-bus-number");
+              spanBus.style.color = "#" + station.lines[i].textColor;
+              spanBus.style.backgroundColor =
+                "#" + station.lines[i].backgroundColor;
               spanBus.textContent = station.lines[i].getFormattedName();
               divBus.appendChild(spanBus);
             }
@@ -727,7 +625,11 @@
         divBus.classList.add("bus-numbers");
         for (let i = 0; i < station.lines.length; i++) {
           let spanBus = document.createElement("span");
+          //add style to the span
           spanBus.classList.add("span-bus-number");
+          spanBus.style.color = "#" + station.lines[i].textColor;
+          spanBus.style.backgroundColor =
+            "#" + station.lines[i].backgroundColor;
           spanBus.textContent = station.lines[i].getFormattedName();
           divBus.appendChild(spanBus);
         }
@@ -740,12 +642,160 @@
     }
   }
 
+  function afficherSearch() {
+    let searchBox = document.createElement("div");
+    searchBox.classList.add("search-box");
+    let input = document.createElement("input");
+    input.setAttribute("type", "text");
+    input.setAttribute("placeholder", "Type to search");
+    input.classList.add("search-txt");
+    input.setAttribute("id", "search");
+
+    let stop = document.createElement("div");
+    stop.classList.add("stop");
+    stop.setAttribute("id", "stop");
+
+    // Add the input and stop elements to the searchBox element
+    searchBox.appendChild(input);
+
+    // Append the searchBox element to an existing element in the DOM
+    let container = document.getElementById("schedule");
+    container.appendChild(searchBox);
+    container.appendChild(stop);
+
+    let search = document.getElementById("search");
+
+    search.addEventListener("keyup", (e) => {
+      if (search.value == "") {
+        Clear();
+        afficherBus();
+      } else {
+        Clear();
+        let stations = Data.getStationByPartialName(search.value, (limit = 20));
+
+        let divTextProx = document.createElement("div");
+        divTextProx.classList.add("text-stop");
+        let h4Prox = document.createElement("h4");
+        h4Prox.textContent = "Recherche";
+        divTextProx.appendChild(h4Prox);
+        document.getElementById("stop").appendChild(divTextProx);
+
+        let divStop = document.createElement("div");
+        divStop.classList.add("stop-prox");
+        document.getElementById("stop").appendChild(divStop);
+
+        stations.forEach((station) => {
+          // créer une nouvelle div pour la station
+          let divStation = document.createElement("div");
+          divStation.classList.add("bus-stop");
+
+          // ajouter le nom de la station à la div
+          let nomStation = document.createElement("p");
+          nomStation.classList.add("stop-name");
+          nomStation.textContent = station.getShortName();
+          divStation.appendChild(nomStation);
+
+          // ajouter l'ID de la station à la div
+          let idStation = document.createElement("div");
+          idStation.setAttribute("id", station.id);
+          divStation.appendChild(idStation);
+
+          // ajouter les lignes de bus à la div
+          let divBus = document.createElement("div");
+          divBus.classList.add("bus-numbers");
+          for (let i = 0; i < station.lines.length; i++) {
+            let spanBus = document.createElement("span");
+            spanBus.classList.add("span-bus-number");
+            spanBus.style.color = "#" + station.lines[i].textColor;
+            spanBus.style.backgroundColor =
+              "#" + station.lines[i].backgroundColor;
+            spanBus.textContent = station.lines[i].getFormattedName();
+            divBus.appendChild(spanBus);
+          }
+          divStation.appendChild(divBus);
+
+          // ajouter la div de la station à la page
+          let divProx = document.querySelector(".stop-prox");
+          divProx.appendChild(divStation);
+        });
+      }
+    });
+
+  }
+
   function Clear() {
     document.getElementById("stop").innerHTML = "";
   }
 
+  function ClearAll() {
+    document.getElementById("schedule").innerHTML = "";
+  }
+
   function ScheduleDisplay() {
-    Clear();
+    ClearAll();
+    afficherSearch();
     afficherBus();
+  }
+
+  function SyncAltDisplay() {}
+
+  function BusAlertDisplay() {}
+
+  function TuneDisplay() {}
+
+  function SetDisplay() {
+    let activediv = "schedule";
+    const uls = document.querySelectorAll("ul");
+
+    uls.forEach((ul) => {
+      const resetClass = ul.parentNode.getAttribute("class");
+      const lis = ul.querySelectorAll("li");
+      lis.forEach((li) => {
+        li.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const target = e.currentTarget;
+          const where = target.getAttribute("data-where");
+
+          if (where == "schedule") {
+            ScheduleDisplay();
+          } else if (where == "sync_alt") {
+            SyncAltDisplay();
+          } else if (where == "bus_alert") {
+            BusAlertDisplay();
+          } else if (where == "tune") {
+            TuneDisplay();
+          }
+
+          if (
+            target.classList.contains("active") ||
+            target.classList.contains("follow")
+          ) {
+            return;
+          }
+
+          ul.parentNode.setAttribute(
+            "class",
+            `${resetClass} ${target.getAttribute("data-where")}-style`
+          );
+
+          lis.forEach((item) => clearClass(item, "active"));
+
+          const divs = document.querySelectorAll(".container-stage > div");
+          divs.forEach((div) => {
+            document
+              .getElementById(target.getAttribute("data-where"))
+              .setAttribute("style", "display:block");
+
+            document
+              .getElementById(activediv)
+              .setAttribute("style", "display:none");
+            activediv = target.getAttribute("data-where");
+          });
+
+          setClass(target, "active");
+        });
+      });
+    });
   }
 </script>

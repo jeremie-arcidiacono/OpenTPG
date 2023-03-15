@@ -27,8 +27,8 @@ function onDeviceReady() {
                                 alert('Impossible de recevoir les données en temps réel. Veuillez réessayer plus tard.');
                             })
                             .then(() => {
-                                    // All is ok and ready, we launch the display
-                                    ScheduleDisplay();
+                                SetDisplay();
+                                ScheduleDisplay();
                                 }
                             );
                     });
