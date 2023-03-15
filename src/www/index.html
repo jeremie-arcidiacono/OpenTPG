@@ -558,7 +558,7 @@
     node.classList.add(className);
   }
 
-  function afficherBus() {
+  function displayBusProx() {
     Data.getNearbyStations(5)
       .then((stations) => {
         if (stations.length == 0) {
@@ -579,7 +579,7 @@
     }
   }
 
-  function afficherSearch() {
+  function displaySearch() {
     let searchBox = document.createElement("div");
     searchBox.classList.add("search-box");
     let input = document.createElement("input");
@@ -605,7 +605,7 @@
     search.addEventListener("keyup", (e) => {
       if (search.value == "") {
         Clear();
-        afficherBus();
+        displayBusProx();
       } else {
         Clear();
         let stations = Data.getStationByPartialName(search.value, (limit = 20));
@@ -625,8 +625,8 @@
 
   function ScheduleDisplay() {
     ClearAll();
-    afficherSearch();
-    afficherBus();
+    displaySearch();
+    displayBusProx();
   }
 
   function SyncAltDisplay() {}
