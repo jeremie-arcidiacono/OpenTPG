@@ -11,18 +11,31 @@ function onDeviceReady() {
     document.addEventListener('resume', onResume, false);
 
     if (!networkIsAvailable()) {
-        alert('No network connection');
+        alert('Connexion internet non disponible. Veuillez vérifier votre connexion.');
     } else {
         LocalData.updateStationStorage()
             .then(() => {
-
+                // Before displaying the data, we try to send a random request to the API to check if the data is
+                // available
+                Data.getStationById('8592978') // Station Chemin du Bac
+                    .catch(error => {
+                        alert('Impossible de recevoir les données en temps réel. Veuillez réessayer plus tard.');
+                    })
+                    .then((station) => {
+                        RemoteData.getStationboard(station)
+                            .catch(error => {
+                                alert('Impossible de recevoir les données en temps réel. Veuillez réessayer plus tard.');
+                            })
+                            .then(() => {
+                                    // All is ok and ready, we launch the display
+                                    ScheduleDisplay();
+                                }
+                            );
+                    });
             })
             .catch(error => {
-                // Error of the update of the local storage
+                alert('Erreur lors de la mise à jour du cache local. Vérifiez votre connexion internet.');
             });
-
-        
-    afficherBus();
     }
 }
 
@@ -36,7 +49,6 @@ function onResume() {
 
 /**
  * Check if the network is available.
- * If not, display an alert.
  * @returns {boolean}
  */
 function networkIsAvailable() {
