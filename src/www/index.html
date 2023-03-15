@@ -9,17 +9,6 @@
   <body style="background-color: #374955">
     <main>
       <div id="schedule" style="display: block">
-        <h1>
-          <div class="search-box">
-            <input
-              type="text"
-              placeholder="Type to search"
-              class="search-txt"
-              id="search"
-            />
-          </div>
-        </h1>
-        <div class="stop" id="stop"></div>
       </div>
       <div id="sync_alt" style="display: none">
         <h1>
@@ -64,6 +53,8 @@
   <script src="js/inc/models/station.js"></script>
   <script src="js/inc/models/stop.js"></script>
   <script src="js/inc/models/bus.js"></script>
+  <script src="js/inc/models/journey.js"></script>
+  <script src="js/inc/models/connection.js"></script>
   <script src="js/inc/dataProviders/localData.js"></script>
   <script src="js/inc/dataProviders/remoteData.js"></script>
   <script src="js/inc/dataProviders/data.js"></script>
@@ -521,7 +512,6 @@
   .bus-list-container {
     display: flex;
     flex-direction: column;
-    background-color: #fff;
     border-radius: 10px;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
     padding: 10px;
@@ -537,15 +527,21 @@
   }
 
   .bus-number {
-    font-size: 18px;
-    font-weight: bold;
-    color: #000;
-    margin-right: 10px;
+    font-size: 13px;
+    padding: 1% 2%;
+    border-radius: 10px;
+    height: 20px;
+    width: 30px;
+    text-align: center;
+    line-height: 20px;
+    margin-left: 2%;
+    min-width: 25px;
+    position: relative;
   }
 
   .bus-destination {
     font-size: 14px;
-    color: #666;
+    color: #c2c2c2;
   }
 </style>
 
@@ -565,7 +561,7 @@
           alert("Aucune station de bus à proximité");
         } else if (document.getElementById("search").value == "") {
           Clear();
-          displayBus("A proximité" ,stations);
+          displayBus("A proximité", stations);
         }
       })
       .catch((error) => {
@@ -592,6 +588,10 @@
     stop.classList.add("stop");
     stop.setAttribute("id", "stop");
 
+    let stopFav = document.createElement("div");
+    stopFav.classList.add("stop");
+    stopFav.setAttribute("id", "stop-fav");
+
     // Add the input and stop elements to the searchBox element
     searchBox.appendChild(input);
 
@@ -599,6 +599,7 @@
     let container = document.getElementById("schedule");
     container.appendChild(searchBox);
     container.appendChild(stop);
+    container.appendChild(stopFav);
 
     let search = document.getElementById("search");
 
@@ -701,14 +702,20 @@
 
     let divStop = document.createElement("div");
     divStop.classList.add("stop-prox");
+
+
+    if(title == "Favoris"){
+      divStop.setAttribute("id", "stop-fav");
+    }else{
     document.getElementById("stop").appendChild(divStop);
+    }
 
     stations.forEach((station) => {
       // créer une nouvelle div pour la station
       let divStation = document.createElement("div");
       divStation.classList.add("bus-stop");
       divStation.onclick = function () {
-        ClearAll();
+        Clear();
         Data.getStationboard(station, 32).then((bus) => {
           if (bus.length == 0) {
             alert("Aucun bus à venir");
@@ -723,6 +730,8 @@
               let busNumber = document.createElement("div");
               busNumber.classList.add("bus-number");
               busNumber.textContent = bu.line.getFormattedName();
+              busNumber.style.backgroundColor = "#" + bu.line.backgroundColor;
+              busNumber.style.color = "#" + bu.line.textColor;
               busListItem.appendChild(busNumber);
 
               let busDestination = document.createElement("div");
@@ -772,7 +781,7 @@
       divStation.appendChild(divBus);
 
       // ajouter la div de la station à la page
-      let divProx = document.querySelector(".stop-prox");
+      let divProx = document.getElementById("stop-fav");
       divProx.appendChild(divStation);
     });
   }
