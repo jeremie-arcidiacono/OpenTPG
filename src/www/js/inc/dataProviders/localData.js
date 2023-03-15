@@ -1,6 +1,7 @@
 "use strict";
 
 const REMOTE_STATIONS_FILE_URL = 'https://raw.githubusercontent.com/jeremie-arcidiacono/OpenTPG/main/tpg-data/stations.json';
+const REMOTE_LINES_FILE_URL = 'https://raw.githubusercontent.com/jeremie-arcidiacono/OpenTPG/main/tpg-data/lines.json';
 
 class LocalData {
 
@@ -61,14 +62,33 @@ class LocalData {
         return null;
     }
 
+    /** Get a Line object from the local storage
+     * @param {string} name
+     * @return {Line|null}
+     */
+    static getLineByName(name) {
+        name = name.toLowerCase();
+
+        let lines = JSON.parse(localStorage.getItem('lines'))["lines"];
+
+        let line = lines.find(line => line[0].toLowerCase() === name);
+
+        if (line !== null && line !== undefined) {
+            let backgroundColor = line[1].split('~')[0];
+            let textColor = line[1].split('~')[1];
+            return new Line(line[0], backgroundColor, textColor);
+        }
+        return null;
+    }
+
     /**
      * Put the stations data from a remote location.
      * If the local data is older than the remote data, update the local data.
      * @return {Promise<boolean>} True if the data has been updated
      */
-    static updateStationStorage() {
-        return new Promise((resolve, reject) => {
-            // Get the remote file
+    static updateLocalStorage() {
+        let stationsPromise = new Promise((resolve, reject) => {
+            // Get the remote file of stations
             fetch(REMOTE_STATIONS_FILE_URL)
                 .then(response => response.json())
                 .then(remoteData => {
@@ -114,7 +134,45 @@ class LocalData {
                 .catch(error => {
                     reject(false);
                 });
+        });
 
+        let linesPromise = new Promise((resolve, reject) => {
+            // Get the remote file of lines
+            fetch(REMOTE_LINES_FILE_URL)
+                .then(response => response.json())
+                .then(remoteData => {
+                    if (localStorage.getItem('lines') !== null && localStorage.getItem('lines') !== undefined) {
+                        let localDate = JSON.parse(localStorage.getItem('lines'))["date"];
+                        let remoteDate = remoteData["date"];
+
+                        // If the local data is older than the remote data, update the local data
+                        if (localDate < remoteDate) {
+                            remoteData["lines"] = Object.keys(remoteData["lines"]).map(function (key) {
+                                return [key, remoteData["lines"][key]];
+                            });
+
+                            // Save the data in the local storage
+                            localStorage.setItem('lines', JSON.stringify(remoteData));
+                            resolve(true);
+                        }
+                    } else {
+                        remoteData["lines"] = Object.keys(remoteData["lines"]).map(function (key) {
+                            return [key, remoteData["lines"][key]];
+                        });
+
+                        // Save the data in the local storage
+                        localStorage.setItem('lines', JSON.stringify(remoteData));
+                        resolve(true);
+                    }
+                    resolve(false);
+                })
+                .catch(error => {
+                    reject(false);
+                });
+        });
+
+        return Promise.all([stationsPromise, linesPromise]).then(values => {
+            return values[0] || values[1];
         });
     }
 

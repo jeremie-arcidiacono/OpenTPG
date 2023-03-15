@@ -3,7 +3,7 @@
 class Station {
     id;
     name;
-    lines;
+    lines; // Array of Line objects
     #isFavorite;
 
     /**
@@ -16,8 +16,21 @@ class Station {
     constructor(id, name, lines = null, isFavorite = false) {
         this.id = id;
         this.name = name;
-        this.lines = lines;
         this.#isFavorite = isFavorite;
+
+        let arrLines = [];
+        if (lines !== null) {
+            for (let line of lines) {
+                let lineObj = LocalData.getLineByName(line);
+                if (lineObj !== null) {
+                    arrLines.push(lineObj);
+                }
+                else {
+                    console.warn("Line '" + line + "' not found in the local data");
+                }
+            }
+        }
+        this.lines = arrLines;
     }
 
     /**

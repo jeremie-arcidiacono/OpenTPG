@@ -8,7 +8,7 @@ class Bus {
     nextStop;
 
     /**
-     * @param {string} line
+     * @param {Line} line
      * @param {Stop[]} nextStop
      */
     constructor(line, nextStop) {

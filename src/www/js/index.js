@@ -13,7 +13,7 @@ function onDeviceReady() {
     if (!networkIsAvailable()) {
         alert('Connexion internet non disponible. Veuillez vérifier votre connexion.');
     } else {
-        LocalData.updateStationStorage()
+        LocalData.updateLocalStorage()
             .then(() => {
                 // Before displaying the data, we try to send a random request to the API to check if the data is
                 // available

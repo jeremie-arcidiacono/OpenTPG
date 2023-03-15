@@ -49,7 +49,7 @@ class RemoteData {
                         if (bus.number.startsWith('T ')) {
                             bus.number = bus.number.replace('T ', '');
                         }
-                        busList.push(new Bus(bus.number, nextStop));
+                        busList.push(new Bus(LocalData.getLineByName(bus.number), nextStop));
                     });
                     resolve(busList);
                 })
