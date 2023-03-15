@@ -15,6 +15,7 @@
               type="text"
               placeholder="Type to search"
               class="search-txt"
+              id="search"
             />
           </div>
         </h1>
@@ -59,6 +60,7 @@
     </div>
   </body>
   <script src="cordova.js"></script>
+  <script src="js/inc/models/line.js"></script>
   <script src="js/inc/models/station.js"></script>
   <script src="js/inc/models/stop.js"></script>
   <script src="js/inc/models/bus.js"></script>
@@ -131,7 +133,7 @@
     --app-content-background-color: #374955;
   }
   .tabbar {
-    background-color: let(--app-content-background-color);
+    background-color: rgba(0, 0, 0, 0);
 
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0);
     height: 71px;
@@ -520,6 +522,60 @@
 </style>
 
 <script>
+  let search = document.getElementById("search");
+
+  search.addEventListener("keyup", (e) => {
+    if (search.value == "") {
+      ScheduleDisplay();
+    } else {
+      Clear();
+      let stations = Data.getStationByPartialName(search.value, (limit = 20));
+
+      let divTextProx = document.createElement("div");
+      divTextProx.classList.add("text-stop");
+      let h4Prox = document.createElement("h4");
+      h4Prox.textContent = "Recherche";
+      divTextProx.appendChild(h4Prox);
+      document.getElementById("stop").appendChild(divTextProx);
+
+      let divStop = document.createElement("div");
+      divStop.classList.add("stop-prox");
+      document.getElementById("stop").appendChild(divStop);
+
+      stations.forEach((station) => {
+        // créer une nouvelle div pour la station
+        let divStation = document.createElement("div");
+        divStation.classList.add("bus-stop");
+
+        // ajouter le nom de la station à la div
+        let nomStation = document.createElement("p");
+        nomStation.classList.add("stop-name");
+        nomStation.textContent = station.getShortName();
+        divStation.appendChild(nomStation);
+
+        // ajouter l'ID de la station à la div
+        let idStation = document.createElement("div");
+        idStation.setAttribute("id", station.id);
+        divStation.appendChild(idStation);
+
+        // ajouter les lignes de bus à la div
+        let divBus = document.createElement("div");
+        divBus.classList.add("bus-numbers");
+        for (let i = 0; i < station.lines.length; i++) {
+          let spanBus = document.createElement("span");
+          spanBus.classList.add("span-bus-number");
+          spanBus.textContent = station.lines[i].getFormattedName();
+          divBus.appendChild(spanBus);
+        }
+        divStation.appendChild(divBus);
+
+        // ajouter la div de la station à la page
+        let divProx = document.querySelector(".stop-prox");
+        divProx.appendChild(divStation);
+      });
+    }
+  });
+
   let activediv = "schedule";
   const uls = document.querySelectorAll("ul");
 
@@ -573,6 +629,7 @@
 
   function clearClass(node, className) {
     node.classList.remove(className);
+    document.getElementById("search").value = "";
   }
 
   function setClass(node, className) {
@@ -584,7 +641,9 @@
       .then((stations) => {
         if (stations.length == 0) {
           alert("Aucune station de bus à proximité");
-        } else {
+        } else if(document.getElementById("search").value == "") {
+          Clear();
+
           let divTextProx = document.createElement("div");
           divTextProx.classList.add("text-stop");
           let h4Prox = document.createElement("h4");
@@ -618,7 +677,7 @@
             for (let i = 0; i < station.lines.length; i++) {
               let spanBus = document.createElement("span");
               spanBus.classList.add("span-bus-number");
-              spanBus.textContent = station.lines[i];
+              spanBus.textContent = station.lines[i].getFormattedName();
               divBus.appendChild(spanBus);
             }
             divStation.appendChild(divBus);
@@ -669,7 +728,7 @@
         for (let i = 0; i < station.lines.length; i++) {
           let spanBus = document.createElement("span");
           spanBus.classList.add("span-bus-number");
-          spanBus.textContent = station.lines[i];
+          spanBus.textContent = station.lines[i].getFormattedName();
           divBus.appendChild(spanBus);
         }
         divStation.appendChild(divBus);
