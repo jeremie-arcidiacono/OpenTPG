@@ -1,7 +1,16 @@
 "use strict";
+/**
+ * Authors : Grégoire Péan & Jérémie Arcidiacono
+ * Date : January - March 2023
+ * Description : Class RemoteData
+ */
+
 
 const API_URL = 'https://transport.opendata.ch/v1/';
 
+/**
+ * This class is used to interact with the remote API (https://transport.opendata.ch/)
+ */
 class RemoteData {
 
     /**
@@ -46,10 +55,24 @@ class RemoteData {
                                 });
                             }
                         });
-                        if (bus.number.startsWith('T ')) {
-                            bus.number = bus.number.replace('T ', '');
+                        if (bus.number !== null) {
+                            if (bus.number.startsWith('T ')) {
+                                bus.number = bus.number.replace('T ', '');
+                            }
+                            busList.push(new Bus(LocalData.getLineByName(bus.number), nextStop));
                         }
-                        busList.push(new Bus(LocalData.getLineByName(bus.number), nextStop));
+                        else {
+                            // Sometimes the API doesn't return the bus number
+                            // It's weird but the number can be found in the 'category' field (sometimes)
+                            if (bus.category !== null) {
+                                if (bus.category.startsWith('T ')) {
+                                    bus.category = bus.category.replace('T ', '');
+                                }
+                                busList.push(new Bus(LocalData.getLineByName(bus.category), nextStop));
+                            }
+
+                            // If the number is not found in the 'category' field, we ignore the bus
+                        }
                     });
                     resolve(busList);
                 })

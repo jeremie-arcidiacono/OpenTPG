@@ -1,9 +1,21 @@
 "use strict";
+/**
+ * Authors : Grégoire Péan & Jérémie Arcidiacono
+ * Date : January - March 2023
+ * Description : Class representing a station
+ */
 
+
+/**
+ * Represent a station with a name and a list of lines
+ * @property {string} id The id of the station
+ * @property {string} name The name of the station
+ * @property {Line[]} lines Array of Line objects
+ */
 class Station {
     id;
     name;
-    lines; // Array of Line objects
+    lines;
     #isFavorite;
 
     /**
@@ -30,6 +42,7 @@ class Station {
                 }
             }
         }
+        arrLines = arrLines.reverse();
         this.lines = arrLines;
     }
 

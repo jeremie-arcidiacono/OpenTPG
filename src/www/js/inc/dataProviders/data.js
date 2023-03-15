@@ -1,8 +1,16 @@
 "use strict";
+/**
+ * Authors : Grégoire Péan & Jérémie Arcidiacono
+ * Date : January - March 2023
+ * Description : Class Data
+ */
+
 
 /**
- * This class is a facade for the LocalData and RemoteData classes
- * It will choose the best data provider (local or remote) for the request
+ * This class is a facade for the LocalData and RemoteData classes.
+ * It will choose the best data provider (local or remote) for the request.
+ *
+ * The views should use this class to get the data.
  */
 class Data {
 

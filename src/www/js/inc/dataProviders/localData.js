@@ -1,8 +1,17 @@
 "use strict";
+/**
+ * Authors : Grégoire Péan & Jérémie Arcidiacono
+ * Date : January - March 2023
+ * Description : Class LocalData
+ */
+
 
 const REMOTE_STATIONS_FILE_URL = 'https://raw.githubusercontent.com/jeremie-arcidiacono/OpenTPG/main/tpg-data/stations.json';
 const REMOTE_LINES_FILE_URL = 'https://raw.githubusercontent.com/jeremie-arcidiacono/OpenTPG/main/tpg-data/lines.json';
 
+/**
+ * This class is used to interact with the local storage
+ */
 class LocalData {
 
     /**

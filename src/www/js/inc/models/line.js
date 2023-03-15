@@ -1,5 +1,17 @@
 "use strict";
+/**
+ * Authors : Grégoire Péan & Jérémie Arcidiacono
+ * Date : January - March 2023
+ * Description : Class representing a line
+ */
 
+
+/**
+ * Represent a line with a name (also called number) and a color (background and text)
+ * @property {string} name The name of the line (Ex: "G_pl")
+ * @property {string} backgroundColor The background color of the line (Ex: FFFFFF)
+ * @property {string} textColor The text color of the line (Ex: 000000)
+ */
 class Line {
     name;
     backgroundColor;

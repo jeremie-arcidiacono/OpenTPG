@@ -165,7 +165,6 @@ def adjustColor(color):
     return rgb
 
 def hexToRgb(hex):
-    hex = hex.lstrip('#')
 
     # Extract the red, green, and blue values
     r = int(hex[0:2], 16)
@@ -204,10 +203,7 @@ def rgbToHex(rgb):
     hex_g = format(rgb[1], '02x')
     hex_b = format(rgb[2], '02x')
 
-    # Concatenate the hexadecimal strings to form the final string
-    hex_string = '#' + hex_r + hex_g + hex_b
-
-    return hex_string
+    return hex_r + hex_g + hex_b
 
 def hsvToRgb(hsv):
     h = hsv[0] / 60.0

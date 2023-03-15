@@ -1,11 +1,19 @@
 "use strict";
+/**
+ * Authors : Grégoire Péan & Jérémie Arcidiacono
+ * Date : January - March 2023
+ * Description : Class representing a vehicle
+ */
+
 
 /**
- * Represent a bus with the station where it will stop next (until the terminal)
+ * Represent a vehicle with the station where it will stop next (until the terminal)
+ * @property {Line} line The line of the bus
+ * @property {Stop[]} nextStops Array of Stop objects
  */
 class Bus {
     line;
-    nextStop;
+    nextStops;
 
     /**
      * @param {Line} line
@@ -13,7 +21,7 @@ class Bus {
      */
     constructor(line, nextStop) {
         this.line = line;
-        this.nextStop = nextStop;
+        this.nextStops = nextStop;
     }
 
     /**
@@ -21,6 +29,14 @@ class Bus {
      * @return {Station}
      */
     getTerminal() {
-        return this.nextStop[this.nextStop.length - 1].station;
+        return this.nextStops[this.nextStops.length - 1].station;
+    }
+
+    /**
+     * Get the next station where the bus will stop
+     * @return {Stop}
+     */
+    getNearestStop() {
+        return this.nextStops[0];
     }
 }
