@@ -223,7 +223,7 @@ with open('lines.json', 'w', encoding='utf-8') as jsonFile:
         "date": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
         "lines": dictLinesColors
         }
-    json.dump(dictLinesColors, jsonFile, indent=None, ensure_ascii=False)
+    json.dump(dictFinal, jsonFile, indent=None, ensure_ascii=False)
 
 jsonFile.close()
 print("Writing JSON file done")
