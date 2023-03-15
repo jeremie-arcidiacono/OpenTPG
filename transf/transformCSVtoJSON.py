@@ -82,6 +82,10 @@ for key in dictStations:
     lines = list(dictStations.fromkeys(lines)) # Remove the duplicates
     lines.sort()
 
+    # Left trim 0 from the lines
+    for i in range(len(lines)):
+        lines[i] = lines[i].lstrip('0')
+
     dictStations[key] = lines
 print("Processing data done")
 
@@ -158,9 +162,8 @@ with open('TPG_LIGNES.csv', 'r', encoding='utf-8-sig') as csvFile:
             line = row[1]
             terminalStation = row[3]
 
-            # Remove first 0 if there is one (e.g. "02" -> "2")
-            if line[0] == '0':
-                line = line[1:]
+            # Left trim 0 from the line (e.g. "02" -> "2")
+            line = line.lstrip('0')
 
             if '/' in terminalStation:
                 terminalStation = terminalStation.split('/')[0]
@@ -204,13 +207,16 @@ for line in dictLinesTerminal:
 
                         dictLinesColors[line] = backgroundColor + "~" + textColor
                     else:
+                        # API doesn't return the colors of the lines
                         print("[01] No color found for line " + line + " (terminal : " + dictLinesTerminal[line] + ")")
                         dictLinesColors[line] = "000000~FFFFFF"
                     break
             if line not in dictLinesColors:
+                # API doesn't return this line for this terminal at this time
                 print("[02] No color found for line " + line + " (terminal : " + dictLinesTerminal[line] + ")")
                 dictLinesColors[line] = "000000~FFFFFF"
         else:
+            # API doesn't return any result (probably because the terminal is not recognized)
             print("[03] No color found for line " + line + " (terminal : " + dictLinesTerminal[line] + ")")
             dictLinesColors[line] = "000000~FFFFFF"
 print("Fetching colors of lines done")
