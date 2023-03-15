@@ -19,7 +19,7 @@ class Station {
         this.#isFavorite = isFavorite;
 
         let arrLines = [];
-        if (lines !== null) {
+        if (lines !== null && lines.length > 0) {
             for (let line of lines) {
                 let lineObj = LocalData.getLineByName(line);
                 if (lineObj !== null) {

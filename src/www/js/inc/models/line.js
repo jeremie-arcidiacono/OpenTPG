@@ -23,7 +23,7 @@ class Line {
     getFormattedName() {
         let newName = this.name;
 
-        newName.replace('_pl', '+');
+        newName = newName.replace('_pl', '+');
 
         return newName;
     }
