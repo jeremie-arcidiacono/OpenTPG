@@ -100,6 +100,11 @@ class Data {
                 },
                 error => {
                     reject(error);
+                },
+                {
+                    maximumAge: 10000,
+                    timeout: 5000,
+                    enableHighAccuracy: false
                 }
             );
         });

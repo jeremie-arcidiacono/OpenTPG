@@ -54,3 +54,17 @@ function onResume() {
 function networkIsAvailable() {
     return navigator.connection.type !== Connection.NONE;
 }
+
+/**
+ * Check if the geolocation is available.
+ * @return {Promise<void>} Resolve if it's available
+ */
+function gpsIsAvailable() {
+    return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+            maximumAge: 15000,
+            timeout: 3000,
+            enableHighAccuracy: false
+        });
+    })
+}
