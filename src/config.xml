@@ -1,17 +1,20 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.jgcorp.opentpg" version="0.1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.jgcorp.opentpg" version="0.1.0" xmlns="http://www.w3.org/ns/widgets">
     <name>OpenTPG</name>
-    <description>A sample Apache Cordova application that responds to the deviceready event.</description>
+    <description>A new independent app for Geneva's public transport system (TPG) built with Cordova.</description>
     <author>
         Jérémie Arcidiacono and Grégoire Péan
     </author>
-    <content src="index.html" />
-    <allow-intent href="http://*/*" />
-    <allow-intent href="https://*/*" />
-    
-    <plugin name="cordova-plugin-navigationbar-color" spec="1.0.2" />
-
-    <preference name="orientation" value="portrait" />
-    <preference name="StatusBarBackgroundColor" value="#374955" />
-    <preference name="NavigationBarBackgroundColor" value="#202a30" />
+    <content src="index.html"/>
+    <allow-intent href="http://*/*"/>
+    <allow-intent href="https://*/*"/>
+    <preference name="orientation" value="portrait"/>
+    <preference name="StatusBarBackgroundColor" value="#374955"/>
+    <preference name="NavigationBarBackgroundColor" value="#202a30"/>
+    <plugin name="cordova-plugin-navigationbar-color" spec="1.0.2"/>
+    <platform name="android">
+        <uses-permission name="android.permission.ACCESS_COARSE_LOCATION"/>
+        <uses-permission name="android.permission.ACCESS_FINE_LOCATION"/>
+        <uses-permission name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+    </platform>
 </widget>
