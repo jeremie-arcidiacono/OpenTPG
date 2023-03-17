@@ -36,6 +36,12 @@ class RemoteData {
                                 time = time.getTime() + bus.stop.delay * 1000
                             }
                         }
+
+                        // We don't want to display bus which will arrive in more than {maxTimeLimit} minutes
+                        if (new Date(time) - new Date() > maxTimeLimit * 60 * 1000) {
+                            return;
+                        }
+
                         nextStop.push(new Stop(station, new Date(time)));
 
                         bus.passList.forEach(stop => {
@@ -43,9 +49,6 @@ class RemoteData {
                                 let time = stop.prognosis.departure;
                                 if (time === null) {
                                     time = stop.prognosis.arrival;
-                                }
-                                if (new Date(time).getTime() - new Date().getTime() > maxTimeLimit * 60 * 1000) {
-                                    return; // We don't want to display bus which will arrive in more than {maxTimeLimit} minutes
                                 }
 
                                 let currentStationPromise;
