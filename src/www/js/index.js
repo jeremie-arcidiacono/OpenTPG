@@ -13,25 +13,26 @@ function onDeviceReady() {
     if (!networkIsAvailable()) {
         alert('Connexion internet non disponible. Veuillez vérifier votre connexion.');
     } else {
-        LocalData.updateLocalStorage()
-            .then(() => {
-                // Before displaying the data, we try to send a random request to the API to check if the data is available
-                Data.getStationById('8592978') // Station Chemin du Bac
+        // Before displaying the real data, we try to send a random request to the API to check if the data is available
+        Data.getStationById('8592978') // Station Chemin du Bac
+            .catch(error => {
+                alert('Impossible de recevoir les données en temps réel. Veuillez réessayer plus tard.');
+            })
+            .then((station) => {
+                RemoteData.getStationboard(station)
                     .catch(error => {
                         alert('Impossible de recevoir les données en temps réel. Veuillez réessayer plus tard.');
                     })
-                    .then((station) => {
-                        RemoteData.getStationboard(station)
-                            .catch(error => {
-                                alert('Impossible de recevoir les données en temps réel. Veuillez réessayer plus tard.');
-                            })
-                            .then(() => {
-                                SetDisplay();
-                                ScheduleDisplay();
-                                }
-                            );
-                    });
-            })
+                    .then(() => {
+                            // All is OK and ready, we can launch the app
+                            SetDisplay();
+                            ScheduleDisplay();
+                        }
+                    );
+            });
+
+
+        LocalData.updateLocalStorage()
             .catch(error => {
                 alert('Erreur lors de la mise à jour du cache local. Vérifiez votre connexion internet.');
             });
