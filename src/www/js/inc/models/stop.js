@@ -1,4 +1,5 @@
 "use strict";
+
 /**
  * Authors : Grégoire Péan & Jérémie Arcidiacono
  * Date : January - March 2023
@@ -32,6 +33,6 @@ class Stop {
     getMinutesLeft() {
         let now = new Date();
         let diff = this.time.getTime() - now.getTime();
-        return Math.floor(diff / 1000 / 60);
+        return Math.max(Math.floor(diff / 1000 / 60), 0);
     }
 }
