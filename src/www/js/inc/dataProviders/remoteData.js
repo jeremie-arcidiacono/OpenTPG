@@ -20,7 +20,7 @@ class RemoteData {
      * @param {number} maxTimeLimit The maximum time to wait for a bus (in minutes)
      * @return {Promise<Bus[]>}
      */
-    static getStationboard(station, limit = 32, maxTimeLimit = 60) {
+    static getStationboard(station, limit = 80, maxTimeLimit = 60) {
         return new Promise((resolve, reject) => {
             fetch(API_URL + 'stationboard?id=' + station.id + '&limit=' + limit)
                 .then(response => response.json())
@@ -119,7 +119,7 @@ class RemoteData {
      */
     static getStationById(id) {
         return new Promise((resolve, reject) => {
-            fetch(API_URL + 'locations?id=' + id)
+            fetch(API_URL + 'locations?query=' + id)
                 .then(response => response.json())
                 .then(data => {
                     data.stations.forEach(currentStation => {
@@ -128,7 +128,7 @@ class RemoteData {
                         }
                     });
 
-                    reject('Station not found');
+                    reject('Arrêt non trouvé');
                 })
                 .catch(error => {
                     reject(error);

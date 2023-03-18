@@ -85,7 +85,7 @@ class Data {
      * @param {number} maxTimeLimit The maximum time to wait for a bus (in minutes)
      * @return {Promise<Bus[]>}
      */
-    static getStationboard(station, limit = 32, maxTimeLimit = 60) {
+    static getStationboard(station, limit = 80, maxTimeLimit = 60) {
         return RemoteData.getStationboard(station, limit, maxTimeLimit);
     }
 
