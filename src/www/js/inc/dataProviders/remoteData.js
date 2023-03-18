@@ -80,6 +80,12 @@ class RemoteData {
                             // If the number is not found in the 'category' field, we ignore the bus
                         }
                     });
+
+                    // Sort the bus list by the time when the bus will arrive at the station
+                    busList.sort((a, b) => {
+                        return a.nextStops[0].time.getTime() - b.nextStops[0].time.getTime();
+                    });
+
                     resolve(busList);
                 })
                 .catch(error => {
