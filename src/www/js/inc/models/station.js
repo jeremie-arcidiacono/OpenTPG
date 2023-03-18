@@ -1,4 +1,5 @@
 "use strict";
+
 /**
  * Authors : Grégoire Péan & Jérémie Arcidiacono
  * Date : January - March 2023
@@ -33,11 +34,38 @@ class Station {
         let arrLines = [];
         if (lines !== null && lines.length > 0) {
             for (let line of lines) {
+                if (line === null || line === "") {
+                    continue;
+                }
+
+                // Try to find the line with exact name
                 let lineObj = LocalData.getLineByName(line);
                 if (lineObj !== null) {
                     arrLines.push(lineObj);
-                }
-                else {
+                } else {
+                    // Try to find the line with alternative names
+
+                    // 1. If the line name finish by "_p", we try to find the line with "_pl" instead
+                    if (line.endsWith("_p")) {
+                        line = line.replace("_p", "_pl");
+                        lineObj = LocalData.getLineByName(line);
+                        if (lineObj !== null) {
+                            arrLines.push(lineObj);
+                            continue;
+                        }
+                    }
+
+                    // 2. If the line name finish by "_pl", we try to find the name without the "_pl"
+                    if (line.endsWith("_pl")) {
+                        line = line.replace("_pl", "");
+                        lineObj = LocalData.getLineByName(line);
+                        if (lineObj !== null) {
+                            arrLines.push(lineObj);
+                            continue;
+                        }
+                    }
+
+                    // If after all the tests, the line is still not found, we display a warning
                     console.warn("Line '" + line + "' not found in the local data");
                 }
             }
