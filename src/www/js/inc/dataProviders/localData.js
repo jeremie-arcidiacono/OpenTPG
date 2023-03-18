@@ -20,6 +20,10 @@ class LocalData {
      * @return {Station|null}
      */
     static getStationByName(name) {
+        if (!this.isLocalStorageAvailable()) {
+            return null;
+        }
+
         name = name.toLowerCase();
 
         let stations = JSON.parse(localStorage.getItem('stations'))["stations"];
@@ -39,6 +43,10 @@ class LocalData {
      * @return {Station[]} The list of stations found (empty if none)
      */
     static getStationByPartialName(name, limit) {
+        if (!this.isLocalStorageAvailable()) {
+            return [];
+        }
+
         name = name.toLowerCase();
 
         let stations = JSON.parse(localStorage.getItem('stations'))["stations"];
@@ -58,6 +66,10 @@ class LocalData {
      * @return {Station|null}
      */
     static getStationById(id) {
+        if (!this.isLocalStorageAvailable()) {
+            return null;
+        }
+
         // If id is a number, convert it to a string
         id = id.toString();
 
@@ -76,6 +88,10 @@ class LocalData {
      * @return {Line|null}
      */
     static getLineByName(name) {
+        if (!this.isLocalStorageAvailable()) {
+            return null;
+        }
+
         name = name.toLowerCase();
 
         let lines = JSON.parse(localStorage.getItem('lines'))["lines"];
@@ -122,6 +138,8 @@ class LocalData {
 
                             // Save the data in the local storage
                             localStorage.setItem('stations', JSON.stringify(remoteData));
+
+                            localStorage.setItem('lastUpdate', new Date().getTime());
                             resolve(true);
                         }
                     } else {
@@ -136,6 +154,7 @@ class LocalData {
 
                         // Save the data in the local storage
                         localStorage.setItem('stations', JSON.stringify(remoteData));
+                        localStorage.setItem('lastUpdate', new Date().getTime());
                         resolve(true);
                     }
                     resolve(false);
@@ -190,6 +209,10 @@ class LocalData {
      * @return {Station[]}
      */
     static getFavoriteStations() {
+        if (!this.isLocalStorageAvailable()) {
+            return [];
+        }
+
         let stations = JSON.parse(localStorage.getItem('stations'))["stations"];
 
         let favoriteStations = stations.filter(station => station[1].isFavorite === true);
@@ -201,13 +224,22 @@ class LocalData {
      * Set a station as favorite or not (in the local storage)
      * @param {string} stationId The id of the station
      * @param {boolean} isFavorite
+     * @return {boolean} True if the station has been found and updated. False otherwise.
      */
     static setFavoriteStation(stationId, isFavorite) {
+        if (!this.isLocalStorageAvailable()) {
+            return false;
+        }
+
         stationId = stationId.toString();
 
         let stations = JSON.parse(localStorage.getItem('stations'))["stations"];
 
         let stationIndex = stations.findIndex(station => station[0] === stationId);
+
+        if (stationIndex === -1) {
+            return false;
+        }
 
         stations[stationIndex][1].isFavorite = isFavorite;
 
@@ -215,5 +247,14 @@ class LocalData {
             "date": JSON.parse(localStorage.getItem('stations'))["date"],
             "stations": stations
         }));
+        return true;
+    }
+
+    /**
+     * Check if the local storage is available (not empty)
+     * @return {boolean}
+     */
+    static isLocalStorageAvailable() {
+        return localStorage.getItem('lastUpdate') !== null && localStorage.getItem('lastUpdate') !== undefined;
     }
 }

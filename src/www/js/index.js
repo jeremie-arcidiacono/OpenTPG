@@ -25,14 +25,22 @@ function onDeviceReady() {
                     })
                     .then(() => {
                             // All is OK and ready, we can launch the app
+                            console.log("App ready. Loading display...")
                             SetDisplay();
                             ScheduleDisplay();
                         }
                     );
             });
 
-
+        // In background, run the update of the local storage data.
         LocalData.updateLocalStorage()
+            .then(hasUpdated => {
+                if (hasUpdated) {
+                    console.log("The verification of the local storage update is finished. The new version has been updated successfully.");
+                } else {
+                    console.log("The verification of the local storage update is finished. The local storage was already up-to-date.");
+                }
+            })
             .catch(error => {
                 alert('Erreur lors de la mise à jour du cache local. Vérifiez votre connexion internet.');
             });
