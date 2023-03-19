@@ -63,11 +63,15 @@ class RemoteData {
                                 });
                             }
                         });
+
                         if (bus.number !== null) {
                             if (bus.number.startsWith('T ')) {
                                 bus.number = bus.number.replace('T ', '');
                             }
-                            busList.push(new Bus(LocalData.getLineByName(bus.number), nextStop));
+                            let line = LocalData.getLineByName(bus.number);
+                            if (line !== null){
+                                busList.push(new Bus(line, nextStop));
+                            }
                         } else {
                             // Sometimes the API doesn't return the bus number
                             // It's weird but the number can be found in the 'category' field (sometimes)
@@ -75,7 +79,10 @@ class RemoteData {
                                 if (bus.category.startsWith('T ')) {
                                     bus.category = bus.category.replace('T ', '');
                                 }
-                                busList.push(new Bus(LocalData.getLineByName(bus.category), nextStop));
+                                let line = LocalData.getLineByName(bus.category);
+                                if (line !== null){
+                                    busList.push(new Bus(line, nextStop));
+                                }
                             }
                             // If the number is not found in the 'category' field, we ignore the bus
                         }
