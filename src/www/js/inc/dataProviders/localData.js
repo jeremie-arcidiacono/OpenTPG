@@ -181,6 +181,7 @@ class LocalData {
 
                             // Save the data in the local storage
                             localStorage.setItem('lines', JSON.stringify(remoteData));
+                            localStorage.setItem('lastUpdate', new Date().getTime());
                             resolve(true);
                         }
                     } else {
@@ -190,6 +191,7 @@ class LocalData {
 
                         // Save the data in the local storage
                         localStorage.setItem('lines', JSON.stringify(remoteData));
+                        localStorage.setItem('lastUpdate', new Date().getTime());
                         resolve(true);
                     }
                     resolve(false);
