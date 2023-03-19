@@ -150,6 +150,11 @@ class LocalData {
                         // Set the isFavorite property to false for all the stations by default
                         remoteData["stations"].forEach(station => {
                             station[1].isFavorite = false;
+
+                            // Set the station "Gare Cornavin" as favorite by default
+                            if (station[0] === "8587057") {
+                                station[1].isFavorite = true;
+                            }
                         });
 
                         // Save the data in the local storage
