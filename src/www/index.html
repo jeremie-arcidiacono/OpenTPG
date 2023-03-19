@@ -716,7 +716,7 @@
       divStation.classList.add("bus-stop");
       divStation.onclick = function () {
         ClearAll();
-        Data.getStationboard(station, 32).then((bus) => {
+        Data.getStationboard(station).then((bus) => {
           if (bus.length == 0) {
             alert("Aucun bus à venir");
           } else {
