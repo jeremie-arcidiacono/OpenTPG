@@ -44,6 +44,7 @@ class LocalData {
      */
     static getStationByPartialName(name, limit) {
         if (!this.isLocalStorageAvailable()) {
+            console.log("Local storage is not available");
             return [];
         }
 

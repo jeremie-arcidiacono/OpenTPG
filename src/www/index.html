@@ -8,8 +8,7 @@
   </head>
   <body style="background-color: #374955">
     <main>
-      <div id="schedule" style="display: block">
-      </div>
+      <div id="schedule" style="display: block"></div>
       <div id="sync_alt" style="display: none">
         <h1>
           <span class="material-icons-outlined"> sync_alt </span>
@@ -462,12 +461,12 @@
     float: right;
     min-width: 130px;
     margin-right: 2%;
-    margin-top: 16px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     max-width: 100px;
-    justify-content: end;
+    margin-left: auto;
+    justify-content: flex-end;
   }
 
   .span-bus-number {
@@ -490,7 +489,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    position: absolute;
   }
 
   .bus-stop {
@@ -500,8 +498,9 @@
     border-top-right-radius: 1px;
     position: relative;
     overflow: hidden;
-    margin-bottom: 14px;
     transition: transform 0.5s ease-out;
+    display: flex;
+    align-items: center;
   }
 
   .bus-stop:hover {
@@ -513,17 +512,17 @@
     display: flex;
     flex-direction: column;
     border-radius: 10px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
     padding: 10px;
     margin: 10px;
+    margin-top: 40px;
+    margin-bottom: 60px;
   }
 
   .bus-list-item {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
 
   .bus-number {
@@ -537,11 +536,20 @@
     margin-left: 2%;
     min-width: 25px;
     position: relative;
+    flex: 0 0 0;
   }
 
   .bus-destination {
-    font-size: 14px;
+    font-size: 18px;
     color: #c2c2c2;
+    margin-left: 10px;
+    flex: 10 0 50%;
+  }
+
+  .bus-arrival-time {
+    flex: 0 0 16%;
+    text-align: end;
+    font-size: 18px;
   }
 </style>
 
@@ -555,24 +563,16 @@
   }
 
   function displayBusProx() {
-    Data.getNearbyStations(5)
-      .then((stations) => {
-        if (stations.length == 0) {
-          alert("Aucune station de bus à proximité");
-        } else if (document.getElementById("search").value == "") {
-          Clear();
-          displayBus("A proximité", stations);
-        }
-      })
-      .catch((error) => {
-        alert(error);
-      });
-
-    let FavStations = Data.getFavoriteStations();
-
-    if (FavStations.length != 0) {
-      displayBus("Favoris", FavStations);
-    }
+    Data.getNearbyStations(5).then((stations) => {
+      if (stations.length == 0) {
+        alert("Aucune station de bus à proximité");
+        displayBusFav();
+      } else if (document.getElementById("search").value == "") {
+        Clear();
+        displayBus("A proximité", stations);
+        displayBusFav();
+      }
+    });
   }
 
   function displaySearch() {
@@ -609,8 +609,8 @@
         displayBusProx();
       } else {
         Clear();
+        console.log(search.value);
         let stations = Data.getStationByPartialName(search.value, (limit = 20));
-
         displayBus("Résultats de recherche", stations);
       }
     });
@@ -630,7 +630,9 @@
     displayBusProx();
   }
 
-  function SyncAltDisplay() {}
+  function SyncAltDisplay() {
+    ClearAll();
+  }
 
   function BusAlertDisplay() {}
 
@@ -703,23 +705,127 @@
     let divStop = document.createElement("div");
     divStop.classList.add("stop-prox");
 
-
-    if(title == "Favoris"){
+    if (title == "Favoris") {
       divStop.setAttribute("id", "stop-fav");
-    }else{
-    document.getElementById("stop").appendChild(divStop);
     }
+    document.getElementById("stop").appendChild(divStop);
 
     stations.forEach((station) => {
       // créer une nouvelle div pour la station
       let divStation = document.createElement("div");
       divStation.classList.add("bus-stop");
       divStation.onclick = function () {
-        Clear();
+        ClearAll();
         Data.getStationboard(station, 32).then((bus) => {
           if (bus.length == 0) {
             alert("Aucun bus à venir");
           } else {
+            // Créer l'élément navbar
+            const navbar = document.createElement("div");
+            navbar.className = "navbar";
+
+            // Créer l'élément navbar__left
+            const navbarLeft = document.createElement("div");
+            navbarLeft.className = "navbar__left";
+            navbar.appendChild(navbarLeft);
+
+            // Créer l'élément i pour l'icône chevron_left
+            const chevronLeftIcon = document.createElement("i");
+            chevronLeftIcon.className = "material-icons-outlined";
+            chevronLeftIcon.innerHTML = "chevron_left";
+            chevronLeftIcon.style.backgroundColor = "transparent";
+            chevronLeftIcon.style.border = "none";
+            navbarLeft.appendChild(chevronLeftIcon);
+
+            // Créer l'élément navbar__center
+            const navbarCenter = document.createElement("div");
+            navbarCenter.className = "navbar__center";
+            navbar.appendChild(navbarCenter);
+
+            // Créer l'élément h1 pour le titre de la barre de navigation
+            const title = document.createElement("h1");
+            title.innerHTML = station.getShortName();
+            navbarCenter.appendChild(title);
+
+            // Créer l'élément navbar__right
+            const navbarRight = document.createElement("div");
+            navbarRight.className = "navbar__right";
+            navbarRight.style.backgroundColor = "transparent";
+            navbarRight.style.border = "none";
+
+            navbar.appendChild(navbarRight);
+
+            // Créer l'élément i pour l'icône bookmark_added
+            const bookmarkIcon = document.createElement("i");
+            bookmarkIcon.className = "material-icons-outlined";
+
+
+            if (station.getIsFavorite()) {
+              bookmarkIcon.innerHTML = "bookmark_remove";
+            } else {
+              bookmarkIcon.innerHTML = "bookmark_added";
+            }
+            bookmarkIcon.style.backgroundColor = "transparent";
+            bookmarkIcon.style.border = "none";
+            navbarRight.appendChild(bookmarkIcon);
+
+
+
+            navbarLeft.onclick = function () {
+              ClearAll();
+              ScheduleDisplay();
+            };
+            navbarRight.onclick = function () {
+              station.setIsFavorite(!station.getIsFavorite())
+            };
+
+            // Créer le style CSS
+            const style = document.createElement("style");
+            style.innerHTML = `@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+            @import url("https://fonts.googleapis.com/icon?family=Material+Icons+Outlined");
+
+            .navbar {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              height: 60px;
+              padding: 0 20px;
+              margin-top: 30px;
+              border-bottom: 1px solid #c2c2c2;
+            }
+
+            .navbar__left,
+            .navbar__right {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              width: 40px;
+              height: 100%;
+              cursor: pointer;
+            }
+
+            .navbar__center {
+              text-align: center;
+            }
+  
+            .navbar__center h1 {
+              margin: 0;
+              font-size: 20px;
+            }
+
+            .fas {
+              font-size: 24px;
+            }
+            .clicked {
+              transform: scale(0.8);
+            }
+            
+            .material-icons-outlined{
+
+              color: #c2c2c2;
+            }`;
+
+            document.head.appendChild(style);
             let busListContainer = document.createElement("div");
             busListContainer.classList.add("bus-list-container");
 
@@ -751,14 +857,41 @@
             });
 
             let container = document.getElementById("schedule");
+            container.appendChild(navbar);
             container.appendChild(busListContainer);
+
+            const leftIcon = document.querySelector('.navbar__left i');
+            const rightIcon = document.querySelector('.navbar__right i');
+                    
+            leftIcon.addEventListener('click', () => {
+              leftIcon.classList.add('clicked');
+              setTimeout(() => {
+                leftIcon.classList.remove('clicked');
+              }, 300);
+            });
+          
+            rightIcon.addEventListener('click', () => {
+              rightIcon.classList.add('clicked');
+              setTimeout(() => {
+                rightIcon.classList.remove('clicked');
+              }, 300);
+            });
+          
+            const heartIcon = document.querySelector('.navbar__right i');
+          
+            heartIcon.addEventListener('click', () => {
+              if (heartIcon.innerHTML == 'bookmark_added') {
+                heartIcon.innerHTML = 'bookmark_remove';
+              } else {
+                heartIcon.innerHTML = 'bookmark_added';
+              }
+            });
           }
         });
       };
 
       // ajouter le nom de la station à la div
       let nomStation = document.createElement("p");
-      nomStation.classList.add("stop-name");
       nomStation.textContent = station.getShortName();
       divStation.appendChild(nomStation);
 
@@ -780,9 +913,18 @@
       }
       divStation.appendChild(divBus);
 
-      // ajouter la div de la station à la page
-      let divProx = document.getElementById("stop-fav");
-      divProx.appendChild(divStation);
+      // Modifier cette ligne pour ajouter la div de la station au bon endroit (divStop)
+      divStop.appendChild(divStation);
     });
+  }
+
+  function displayBusFav() {
+    let FavStations = Data.getFavoriteStations();
+
+    if (FavStations.length != 0) {
+      displayBus("Favoris", FavStations);
+    } else {
+      console.log("Aucun favoris");
+    }
   }
 </script>
