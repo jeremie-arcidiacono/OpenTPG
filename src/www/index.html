@@ -819,11 +819,13 @@
         navbarRight.appendChild(bookmarkIcon);
 
         navbarLeft.onclick = function () {
+          // Cancel the getStationboard promise to prevent it from display the bus list in the home page instead of the schedule page
+          getStationboardPromiseIsCancelled = true;
+
           ClearAll();
           ScheduleDisplay();
         };
         document.addEventListener("backbutton", function backButtonEvent() {
-          // Cancel the getStationboard promise to prevent it from display the bus list in the home page instead of the schedule page
           getStationboardPromiseIsCancelled = true;
 
           ClearAll();
