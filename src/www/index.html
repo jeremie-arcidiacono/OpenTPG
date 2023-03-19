@@ -609,7 +609,6 @@
         displayBusProx();
       } else {
         Clear();
-        console.log(search.value);
         let stations = Data.getStationByPartialName(search.value, (limit = 20));
         displayBus("Résultats de recherche", stations);
       }
@@ -775,6 +774,12 @@
               ClearAll();
               ScheduleDisplay();
             };
+            document.addEventListener("backbutton", function backButtonEvent() {
+              ClearAll();
+              ScheduleDisplay();
+              // Remove this event listener, so it doesn't get called twice. Now the back button will just close the app.
+              document.removeEventListener("backbutton", backButtonEvent, false);
+            });
             navbarRight.onclick = function () {
               station.setIsFavorite(!station.getIsFavorite())
             };
@@ -862,23 +867,23 @@
 
             const leftIcon = document.querySelector('.navbar__left i');
             const rightIcon = document.querySelector('.navbar__right i');
-                    
+
             leftIcon.addEventListener('click', () => {
               leftIcon.classList.add('clicked');
               setTimeout(() => {
                 leftIcon.classList.remove('clicked');
               }, 300);
             });
-          
+
             rightIcon.addEventListener('click', () => {
               rightIcon.classList.add('clicked');
               setTimeout(() => {
                 rightIcon.classList.remove('clicked');
               }, 300);
             });
-          
+
             const heartIcon = document.querySelector('.navbar__right i');
-          
+
             heartIcon.addEventListener('click', () => {
               if (heartIcon.innerHTML == 'bookmark_added') {
                 heartIcon.innerHTML = 'bookmark_remove';
