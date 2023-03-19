@@ -13,7 +13,6 @@ body {
     padding:0px;
     /* Padding to avoid the "unsafe" areas behind notches in the screen */
     padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
-    text-transform:uppercase;
     width:100%;
     background-color: #374955;
 }
@@ -48,5 +47,496 @@ h1 {
     overflow:visible;
     padding:0px;
     text-align:center;
+}
+
+:root {
+  --accent-color: #f5f5f5;
+  --accent-color-fg: #374955;
+  --backdrop-color: #374955;
+  --app-content-background-color: #374955;
+  --inset-shadow: rgba(7, 43, 74, 0.3);
+  --outset-shadow: rgba(223, 240, 255, 0.25);
+  --clay-box-shadow: rgba(7, 43, 74, 0.3);
+  --clay-background-color: #374955;
+  --clay-fg-color: #374955;
+}
+body {
+  background-color: let(--backdrop-color);
+  font-size: 10px;
+  font-family: "Roboto", sans-serif;
+}
+.flex-center {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.container {
+  padding: 1rem 1rem 1.5rem;
+}
+.stage {
+  max-width: 400px;
+  width: 400px;
+  margin: 1rem auto 2rem;
+}
+.schedule.active {
+  color: let(--accent-color);
+}
+.schedule-style {
+  --app-content-background-color: #374955;
+}
+.sync_alt.active {
+  color: let(--accent-color);
+  --inset-shadow: rgba(149, 62, 8, 0.45);
+  --clay-box-shadow: rgba(211, 69, 20, 0.4);
+}
+.sync_alt-style {
+  --app-content-background-color: #374955;
+}
+.bus_alert.active {
+  color: let(--accent-color);
+  --inset-shadow: rgba(88, 54, 13, 0.45);
+  --clay-box-shadow: rgba(88, 54, 13, 0.4);
+}
+.bus_alert-style {
+  --app-content-background-color: #374955;
+}
+.tune.active {
+  color: let(--accent-color);
+  --inset-shadow: rgba(28, 78, 26, 0.45);
+  --clay-box-shadow: rgba(28, 78, 26, 0.4);
+}
+.tune-style {
+  --app-content-background-color: #374955;
+}
+.tabbar {
+  background-color: rgba(0, 0, 0, 0);
+
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0);
+  height: 71px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: content-box;
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.4s;
+}
+.tabbar ul,
+.tabbar li {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.tabbar ul {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: #202a30;
+  align-self: flex-end;
+  justify-content: center;
+  height: 50px;
+}
+.tabbar li {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  margin-right: 5px;
+  transition: all 0.4s;
+  background-color: #202a30;
+  width: 60px;
+  height: 60px;
+  position: relative;
+  color: #c2c2c2;
+  cursor: pointer;
+}
+.tabbar li:last-child {
+  margin-right: 0;
+}
+.tab-style1 ul {
+  justify-content: center;
+}
+.tab-style1 li {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 1px;
+  left: 0;
+  width: 60px;
+  height: 50px;
+  transition: top 0.2s ease-out, width 0.4s, border-radius 0.4s,
+    box-shadow 0.4s;
+}
+.tab-style1 li.follow {
+  position: absolute;
+  border-radius: 100%;
+  content: " ";
+  width: 60px;
+  height: 60px;
+  border: 10px solid let(--app-content-background-color);
+  background-color: let(--app-content-background-color);
+  top: -3rem;
+  transition: left 0.4s ease-in, background-color 0.4s, border-color 0.4s;
+}
+.tab-style1 li.follow:before,
+.tab-style1 li.follow:after {
+  content: " ";
+  position: absolute;
+  top: 27px;
+  right: -27px;
+  border-top: 11px solid let(--app-content-background-color);
+  background-color: #202a30;
+  width: 20px;
+  height: 20px;
+  box-sizing: border-box;
+  transition: border-color 0.4s;
+}
+.tab-style1 li.follow::after {
+  border-top-left-radius: 100%;
+}
+.tab-style1 li.follow:before {
+  left: -27px;
+  right: unset;
+  border-top-right-radius: 100%;
+}
+.tab-style1 li:nth-child(1).active ~ .follow {
+  left: 12px;
+}
+.tab-style1 li:nth-child(2).active ~ .follow {
+  left: 75px;
+}
+.tab-style1 li:nth-child(3).active ~ .follow {
+  left: 140px;
+}
+.tab-style1 li:nth-child(4).active ~ .follow {
+  left: 205px;
+}
+.tab-style1 li:nth-child(5).active ~ .follow {
+  left: 270px;
+}
+.tab-style1 .active {
+  z-index: 100;
+  width: 60px;
+  height: 60px;
+  top: -2rem;
+  border-radius: 100%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+.tab-style2 ul {
+  justify-content: center;
+}
+.tab-style2 li {
+  border-top-left-radius: 100%;
+  border-top-right-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 1px;
+  left: 0;
+  width: 60px;
+  height: 50px;
+}
+.tab-style2 .active {
+  width: 60px;
+  height: 60px;
+  top: -1rem;
+}
+.tab-style2 .active button {
+  font-size: 2rem;
+}
+.tab-style2 .active:before,
+.tab-style2 .active:after {
+  position: absolute;
+  content: " ";
+  width: 13px;
+  height: 13px;
+  border-bottom: 4px solid #202a30;
+  top: 9px;
+}
+.tab-style2 .active:before {
+  border-bottom-right-radius: 100%;
+  left: -7px;
+}
+.tab-style2 .active:after {
+  border-bottom-left-radius: 100%;
+  right: -7px;
+}
+.tab-style3 li {
+  top: -8px;
+  width: 60px;
+  height: 35px;
+  background-color: transparent;
+  padding-top: 3px;
+}
+.tab-style3 li.follow {
+  position: absolute;
+  top: 0;
+  display: flex;
+  border-top: 3px solid #333;
+  width: 60px;
+  height: 1px;
+  transition: all 0.3s ease-out;
+}
+.tab-style3 li:nth-child(1).active ~ .follow {
+  left: 20px;
+  z-index: 20;
+}
+.tab-style3 li:nth-child(2).active ~ .follow {
+  left: 88px;
+  z-index: 20;
+}
+.tab-style3 li:nth-child(3).active ~ .follow {
+  left: 149px;
+  z-index: 20;
+}
+.tab-style3 li:nth-child(4).active ~ .follow {
+  left: 216px;
+  z-index: 20;
+}
+.tab-style4 li {
+  width: 60px;
+  height: 40px;
+  flex-direction: column;
+  overflow: hidden;
+}
+.tab-style4 li button {
+  position: relative;
+  top: 3px;
+  transition: top 0.4s ease-out, font-size 0.2s ease-out;
+  text-shadow: inset 2px 2px 4px let(--clay-box-shadow);
+}
+.tab-style4 li:after {
+  width: 100%;
+  height: 10px;
+  text-align: center;
+  font-size: 8px;
+  font-weight: bold;
+  position: relative;
+  bottom: -30px;
+  opacity: 0;
+  transition: bottom 0.2s ease-out, opacity 0.4s ease-out;
+}
+.tab-style4 li.active:after {
+  opacity: 1;
+  bottom: 2px;
+  text-shadow: inset 2px 2px 8px let(--clay-box-shadow);
+}
+.tab-style4 li:nth-child(1):after {
+  content: "schedule";
+}
+.tab-style4 li:nth-child(2):after {
+  content: "sync_alt";
+}
+.tab-style4 li:nth-child(3):after {
+  content: "bus_alert";
+}
+.tab-style4 li:nth-child(4):after {
+  content: "tune";
+}
+.tab-style4 .active button {
+  font-size: 1.1rem;
+  top: -4px;
+}
+.tab-style5 ul {
+  justify-content: center;
+}
+.tab-style5 li {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 1px;
+  left: 0;
+  width: 60px;
+  height: 50px;
+  transition: top 0.4s ease-out, border-radius 0.4s ease-out,
+    box-shadow 0.4s ease-out;
+}
+.tab-style5 .active {
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
+  top: -1rem;
+  background-color: let(--clay-background-color);
+  box-shadow: 1px 2px 4px 0 let(--clay-box-shadow),
+    2px 4px 8px 0 let(--clay-box-shadow),
+    inset 2px 2px 8px let(--outset-shadow),
+    inset -2px -2px 8px let(--inset-shadow);
+  color: let(--clay-fg-color);
+}
+.tab-style5 .active button {
+  font-size: 2rem;
+}
+.container-stage {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  color: #374955;
+  text-align: center;
+}
+.material-icons-outlined {
+  background-color: #202a30;
+  border: 2px solid #202a30;
+  color: #fcfcfc;
+}
+
+.search-box {
+  position: absolute;
+  top: 9%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #2f3640;
+  height: 40px;
+  border-radius: 40px;
+  padding: 7px;
+}
+.search-box:hover > .search-txt {
+  width: 310px;
+  padding: 0 6px;
+}
+
+.search-txt {
+  border: none;
+  background: none;
+  outline: none;
+  float: left;
+  padding: 0;
+  color: white;
+  font-size: 16px;
+  transition: 0.4s;
+  line-height: 40px;
+  width: 290px;
+  margin-left: 5%;
+}
+
+.stop {
+  position: absolute;
+  top: 11%;
+  left: 5%;
+  width: 90%;
+  padding-bottom: 60px;
+}
+
+.stop-fav {
+  color: #c2c2c2;
+  font-size: 17px;
+  font-weight: bold;
+  margin-left: 10px;
+  position: relative;
+  top: -5px;
+}
+
+.text-stop {
+  color: #c2c2c2;
+  font-size: 12px;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.stop-prox {
+  color: #c2c2c2;
+  font-size: 17px;
+  font-weight: bold;
+  margin-left: 10px;
+  position: relative;
+  top: -5px;
+}
+
+.bus-numbers {
+  display: inline-flex;
+  float: right;
+  min-width: 130px;
+  margin-right: 2%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100px;
+  margin-left: auto;
+  justify-content: flex-end;
+}
+
+.span-bus-number {
+  font-size: 13px;
+  padding: 1% 2%;
+  border-radius: 10px;
+  float: right;
+  height: 20px;
+  width: 30px;
+  text-align: center;
+  line-height: 20px;
+  margin-left: 2%;
+  min-width: 25px;
+  position: relative;
+}
+
+.stop-name {
+  display: inline-flex;
+  max-width: 43% !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bus-stop {
+  border-top: 2px solid #2f3640;
+  padding: 10px;
+  border-top-left-radius: 1px;
+  border-top-right-radius: 1px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.5s ease-out;
+  display: flex;
+  align-items: center;
+}
+
+.bus-stop:hover {
+  transform: scale(1.03);
+  transition: 0.3s;
+}
+
+.bus-list-container {
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px;
+  margin-top: 40px;
+  margin-bottom: 60px;
+}
+
+.bus-list-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.bus-number {
+  font-size: 13px;
+  padding: 1% 2%;
+  border-radius: 10px;
+  height: 20px;
+  width: 30px;
+  text-align: center;
+  line-height: 20px;
+  margin-left: 2%;
+  min-width: 25px;
+  position: relative;
+  flex: 0 0 0;
+}
+
+.bus-destination {
+  font-size: 18px;
+  color: #c2c2c2;
+  margin-left: 10px;
+  flex: 10 0 50%;
+  white-space: nowrap;
+}
+
+.bus-arrival-time {
+  flex: 0 0 20%;
+  text-align: end;
+  font-size: 18px;
+  color: #c2c2c2;
+  white-space: nowrap;
 }
 
