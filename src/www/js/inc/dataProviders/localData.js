@@ -24,7 +24,7 @@ class LocalData {
             return null;
         }
 
-        name = name.toLowerCase();
+        name = name.toLowerCase().trim();
 
         let stations = JSON.parse(localStorage.getItem('stations'))["stations"];
 
@@ -48,7 +48,7 @@ class LocalData {
             return [];
         }
 
-        name = name.toLowerCase();
+        name = name.toLowerCase().trim();
 
         let stations = JSON.parse(localStorage.getItem('stations'))["stations"];
 
@@ -93,7 +93,7 @@ class LocalData {
             return null;
         }
 
-        name = name.toLowerCase();
+        name = name.toLowerCase().trim();
 
         let lines = JSON.parse(localStorage.getItem('lines'))["lines"];
 
@@ -139,7 +139,6 @@ class LocalData {
 
                             // Save the data in the local storage
                             localStorage.setItem('stations', JSON.stringify(remoteData));
-
                             localStorage.setItem('lastUpdate', new Date().getTime());
                             resolve(true);
                         }
@@ -190,7 +189,6 @@ class LocalData {
                             return [key, remoteData["lines"][key]];
                         });
 
-                        // Save the data in the local storage
                         localStorage.setItem('lines', JSON.stringify(remoteData));
                         localStorage.setItem('lastUpdate', new Date().getTime());
                         resolve(true);

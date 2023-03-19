@@ -34,6 +34,7 @@ class Station {
         let arrLines = [];
         if (lines !== null && lines.length > 0) {
             for (let line of lines) {
+                line = line.trim();
                 if (line === null || line === "") {
                     continue;
                 }

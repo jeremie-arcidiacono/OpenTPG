@@ -100,6 +100,7 @@ class RemoteData {
      * @return {Promise<Station>} The station found or reject the promise if the station is not found
      */
     static getStationByName(name) {
+        name = name.trim();
         return new Promise((resolve, reject) => {
             fetch(API_URL + 'locations?query=' + name)
                 .then(response => response.json())
