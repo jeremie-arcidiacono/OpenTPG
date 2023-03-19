@@ -566,12 +566,11 @@
     Data.getNearbyStations(5).then((stations) => {
       if (stations.length == 0) {
         alert("Aucune station de bus à proximité");
-        displayBusFav();
       } else if (document.getElementById("search").value == "") {
         Clear();
         displayBus("A proximité", stations);
-        displayBusFav();
       }
+      displayBusFav();
     });
   }
 
@@ -715,78 +714,122 @@
       divStation.classList.add("bus-stop");
       divStation.onclick = function () {
         ClearAll();
-        Data.getStationboard(station).then((bus) => {
+
+        let getStationboardPromiseIsCancelled = false;
+        let getStationboardPromise = Data.getStationboard(station);
+        getStationboardPromise.then((bus) => {
+          if (getStationboardPromiseIsCancelled) {
+              return;
+          }
           if (bus.length == 0) {
             alert("Aucun bus à venir");
           } else {
-            // Créer l'élément navbar
-            const navbar = document.createElement("div");
-            navbar.className = "navbar";
+            let busListContainer = document.createElement("div");
+            busListContainer.classList.add("bus-list-container");
 
-            // Créer l'élément navbar__left
-            const navbarLeft = document.createElement("div");
-            navbarLeft.className = "navbar__left";
-            navbar.appendChild(navbarLeft);
+            bus.forEach((bu) => {
+              let busListItem = document.createElement("div");
+              busListItem.classList.add("bus-list-item");
 
-            // Créer l'élément i pour l'icône chevron_left
-            const chevronLeftIcon = document.createElement("i");
-            chevronLeftIcon.className = "material-icons-outlined";
-            chevronLeftIcon.innerHTML = "chevron_left";
-            chevronLeftIcon.style.backgroundColor = "transparent";
-            chevronLeftIcon.style.border = "none";
-            navbarLeft.appendChild(chevronLeftIcon);
+              let busNumber = document.createElement("div");
+              busNumber.classList.add("bus-number");
+              busNumber.textContent = bu.line.getFormattedName();
+              busNumber.style.backgroundColor = "#" + bu.line.backgroundColor;
+              busNumber.style.color = "#" + bu.line.textColor;
+              busListItem.appendChild(busNumber);
 
-            // Créer l'élément navbar__center
-            const navbarCenter = document.createElement("div");
-            navbarCenter.className = "navbar__center";
-            navbar.appendChild(navbarCenter);
+              let busDestination = document.createElement("div");
+              busDestination.classList.add("bus-destination");
+              busDestination.textContent = bu.getTerminal().getShortName();
+              busListItem.appendChild(busDestination);
 
-            // Créer l'élément h1 pour le titre de la barre de navigation
-            const title = document.createElement("h1");
-            title.innerHTML = station.getShortName();
-            navbarCenter.appendChild(title);
+              // Add time before the bus arrives
+              let busArrivalTime = document.createElement("div");
+              busArrivalTime.classList.add("bus-arrival-time");
+              busArrivalTime.textContent = `${bu
+                      .getNearestStop()
+                      .getMinutesLeft()} min`;
+              busListItem.appendChild(busArrivalTime);
 
-            // Créer l'élément navbar__right
-            const navbarRight = document.createElement("div");
-            navbarRight.className = "navbar__right";
-            navbarRight.style.backgroundColor = "transparent";
-            navbarRight.style.border = "none";
-
-            navbar.appendChild(navbarRight);
-
-            // Créer l'élément i pour l'icône bookmark_added
-            const bookmarkIcon = document.createElement("i");
-            bookmarkIcon.className = "material-icons-outlined";
-
-
-            if (station.getIsFavorite()) {
-              bookmarkIcon.innerHTML = "bookmark_remove";
-            } else {
-              bookmarkIcon.innerHTML = "bookmark_added";
-            }
-            bookmarkIcon.style.backgroundColor = "transparent";
-            bookmarkIcon.style.border = "none";
-            navbarRight.appendChild(bookmarkIcon);
-
-
-
-            navbarLeft.onclick = function () {
-              ClearAll();
-              ScheduleDisplay();
-            };
-            document.addEventListener("backbutton", function backButtonEvent() {
-              ClearAll();
-              ScheduleDisplay();
-              // Remove this event listener, so it doesn't get called twice. Now the back button will just close the app.
-              document.removeEventListener("backbutton", backButtonEvent, false);
+              busListContainer.appendChild(busListItem);
             });
-            navbarRight.onclick = function () {
-              station.setIsFavorite(!station.getIsFavorite())
-            };
 
-            // Créer le style CSS
-            const style = document.createElement("style");
-            style.innerHTML = `@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+            let container = document.getElementById("schedule");
+            container.appendChild(busListContainer);
+          }
+        });
+
+        // Créer l'élément navbar
+        const navbar = document.createElement("div");
+        navbar.className = "navbar";
+
+        // Créer l'élément navbar__left
+        const navbarLeft = document.createElement("div");
+        navbarLeft.className = "navbar__left";
+        navbar.appendChild(navbarLeft);
+
+        // Créer l'élément i pour l'icône chevron_left
+        const chevronLeftIcon = document.createElement("i");
+        chevronLeftIcon.className = "material-icons-outlined";
+        chevronLeftIcon.innerHTML = "chevron_left";
+        chevronLeftIcon.style.backgroundColor = "transparent";
+        chevronLeftIcon.style.border = "none";
+        navbarLeft.appendChild(chevronLeftIcon);
+
+        // Créer l'élément navbar__center
+        const navbarCenter = document.createElement("div");
+        navbarCenter.className = "navbar__center";
+        navbar.appendChild(navbarCenter);
+
+        // Créer l'élément h1 pour le titre de la barre de navigation
+        const title = document.createElement("h1");
+        title.innerHTML = station.getShortName();
+        navbarCenter.appendChild(title);
+
+        // Créer l'élément navbar__right
+        const navbarRight = document.createElement("div");
+        navbarRight.className = "navbar__right";
+        navbarRight.style.backgroundColor = "transparent";
+        navbarRight.style.border = "none";
+
+        navbar.appendChild(navbarRight);
+
+        // Créer l'élément i pour l'icône bookmark_added
+        const bookmarkIcon = document.createElement("i");
+        bookmarkIcon.className = "material-icons-outlined";
+
+
+        if (station.getIsFavorite()) {
+          bookmarkIcon.innerHTML = "bookmark_remove";
+        } else {
+          bookmarkIcon.innerHTML = "bookmark_added";
+        }
+        bookmarkIcon.style.backgroundColor = "transparent";
+        bookmarkIcon.style.border = "none";
+        navbarRight.appendChild(bookmarkIcon);
+
+
+
+        navbarLeft.onclick = function () {
+          ClearAll();
+          ScheduleDisplay();
+        };
+        document.addEventListener("backbutton", function backButtonEvent() {
+          // Cancel the getStationboard promise to prevent it from display the bus list in the home page instead of the schedule page
+          getStationboardPromiseIsCancelled = true;
+
+          ClearAll();
+          ScheduleDisplay();
+          // Remove this event listener, so it doesn't get called twice. Now the back button will just close the app.
+          document.removeEventListener("backbutton", backButtonEvent, false);
+        });
+        navbarRight.onclick = function () {
+          station.setIsFavorite(!station.getIsFavorite())
+        };
+
+        // Créer le style CSS
+        const style = document.createElement("style");
+        style.innerHTML = `@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
             @import url("https://fonts.googleapis.com/icon?family=Material+Icons+Outlined");
 
             .navbar {
@@ -812,7 +855,7 @@
             .navbar__center {
               text-align: center;
             }
-  
+
             .navbar__center h1 {
               margin: 0;
               font-size: 20px;
@@ -824,73 +867,41 @@
             .clicked {
               transform: scale(0.8);
             }
-            
+
             .material-icons-outlined{
 
               color: #c2c2c2;
             }`;
 
-            document.head.appendChild(style);
-            let busListContainer = document.createElement("div");
-            busListContainer.classList.add("bus-list-container");
+        document.head.appendChild(style);
 
-            bus.forEach((bu) => {
-              let busListItem = document.createElement("div");
-              busListItem.classList.add("bus-list-item");
+        let container = document.getElementById("schedule");
+        container.appendChild(navbar);
 
-              let busNumber = document.createElement("div");
-              busNumber.classList.add("bus-number");
-              busNumber.textContent = bu.line.getFormattedName();
-              busNumber.style.backgroundColor = "#" + bu.line.backgroundColor;
-              busNumber.style.color = "#" + bu.line.textColor;
-              busListItem.appendChild(busNumber);
+        const leftIcon = document.querySelector('.navbar__left i');
+        const rightIcon = document.querySelector('.navbar__right i');
 
-              let busDestination = document.createElement("div");
-              busDestination.classList.add("bus-destination");
-              busDestination.textContent = bu.getTerminal().getShortName();
-              busListItem.appendChild(busDestination);
+        leftIcon.addEventListener('click', () => {
+          leftIcon.classList.add('clicked');
+          setTimeout(() => {
+            leftIcon.classList.remove('clicked');
+          }, 300);
+        });
 
-              // Add time before the bus arrives
-              let busArrivalTime = document.createElement("div");
-              busArrivalTime.classList.add("bus-arrival-time");
-              busArrivalTime.textContent = `${bu
-                .getNearestStop()
-                .getMinutesLeft()} min`;
-              busListItem.appendChild(busArrivalTime);
+        rightIcon.addEventListener('click', () => {
+          rightIcon.classList.add('clicked');
+          setTimeout(() => {
+            rightIcon.classList.remove('clicked');
+          }, 300);
+        });
 
-              busListContainer.appendChild(busListItem);
-            });
+        const heartIcon = document.querySelector('.navbar__right i');
 
-            let container = document.getElementById("schedule");
-            container.appendChild(navbar);
-            container.appendChild(busListContainer);
-
-            const leftIcon = document.querySelector('.navbar__left i');
-            const rightIcon = document.querySelector('.navbar__right i');
-
-            leftIcon.addEventListener('click', () => {
-              leftIcon.classList.add('clicked');
-              setTimeout(() => {
-                leftIcon.classList.remove('clicked');
-              }, 300);
-            });
-
-            rightIcon.addEventListener('click', () => {
-              rightIcon.classList.add('clicked');
-              setTimeout(() => {
-                rightIcon.classList.remove('clicked');
-              }, 300);
-            });
-
-            const heartIcon = document.querySelector('.navbar__right i');
-
-            heartIcon.addEventListener('click', () => {
-              if (heartIcon.innerHTML == 'bookmark_added') {
-                heartIcon.innerHTML = 'bookmark_remove';
-              } else {
-                heartIcon.innerHTML = 'bookmark_added';
-              }
-            });
+        heartIcon.addEventListener('click', () => {
+          if (heartIcon.innerHTML == 'bookmark_added') {
+            heartIcon.innerHTML = 'bookmark_remove';
+          } else {
+            heartIcon.innerHTML = 'bookmark_added';
           }
         });
       };
