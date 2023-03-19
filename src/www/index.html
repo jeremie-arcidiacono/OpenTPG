@@ -544,12 +544,15 @@
     color: #c2c2c2;
     margin-left: 10px;
     flex: 10 0 50%;
+    white-space: nowrap;
   }
 
   .bus-arrival-time {
-    flex: 0 0 16%;
+    flex: 0 0 20%;
     text-align: end;
     font-size: 18px;
+    color: #c2c2c2;
+    white-space: nowrap;
   }
 </style>
 
@@ -578,6 +581,7 @@
     });
   }
 
+  // Display the stop of the seach
   function displaySearch() {
     let searchBox = document.createElement("div");
     searchBox.classList.add("search-box");
@@ -587,10 +591,12 @@
     input.classList.add("search-txt");
     input.setAttribute("id", "search");
 
+
     let stop = document.createElement("div");
     stop.classList.add("stop");
     stop.setAttribute("id", "stop");
 
+    // Create a new div element to display the favorite stops
     let stopFav = document.createElement("div");
     stopFav.classList.add("stop");
     stopFav.setAttribute("id", "stop-fav");
@@ -811,8 +817,6 @@
         bookmarkIcon.style.backgroundColor = "transparent";
         bookmarkIcon.style.border = "none";
         navbarRight.appendChild(bookmarkIcon);
-
-
 
         navbarLeft.onclick = function () {
           ClearAll();
