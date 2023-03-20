@@ -10,6 +10,8 @@ function onLoad() {
 function onDeviceReady() {
     document.addEventListener('resume', onResume, false);
 
+    Config.initConfig();
+
     if (!networkIsAvailable()) {
         alert('Connexion internet non disponible. Veuillez vérifier votre connexion.');
     } else {

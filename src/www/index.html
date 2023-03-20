@@ -57,6 +57,7 @@
     </div>
   </body>
   <script src="cordova.js"></script>
+  <script src="js/inc/config.js"></script>
   <script src="js/inc/models/line.js"></script>
   <script src="js/inc/models/station.js"></script>
   <script src="js/inc/models/stop.js"></script>
@@ -85,7 +86,7 @@
 
   // Displays nearby and favorite bus stations, handling errors if GPS is not available
   function displayBusProx() {
-    Data.getNearbyStations(5).then((stations) => {
+    Data.getNearbyStations().then((stations) => {
       if (stations.length == 0) {
         alert("Aucune station de bus à proximité");
       } else if (document.getElementById("search").value == "") {
@@ -137,7 +138,7 @@
         displayBusProx();
       } else {
         Clear();
-        let stations = Data.getStationByPartialName(search.value, (limit = 20));
+        let stations = Data.getStationByPartialName(search.value);
         displayBus("Résultats de recherche", stations);
       }
     });

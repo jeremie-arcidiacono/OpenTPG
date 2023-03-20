@@ -17,10 +17,9 @@ class RemoteData {
      * Get a list of bus which will stop at the station
      * @param {Station} station
      * @param {number} limit The maximum number of bus to return
-     * @param {number} maxTimeLimit The maximum time to wait for a bus (in minutes)
      * @return {Promise<Bus[]>}
      */
-    static getStationboard(station, limit = 80, maxTimeLimit = 60) {
+    static getStationboard(station, limit = 256) {
         return new Promise((resolve, reject) => {
             fetch(API_URL + 'stationboard?id=' + station.id + '&limit=' + limit)
                 .then(response => response.json())
@@ -38,7 +37,7 @@ class RemoteData {
                         }
 
                         // We don't want to display bus which will arrive in more than {maxTimeLimit} minutes
-                        if (new Date(time) - new Date() > maxTimeLimit * 60 * 1000) {
+                        if (new Date(time) - new Date() > Config.get("maxArrivalTime", 60) * 60 * 1000) {
                             return;
                         }
 
@@ -154,10 +153,9 @@ class RemoteData {
      * Get a list of the nearest stations
      * @param {number} lat
      * @param {number} long
-     * @param {number} limit The maximum number of stations to return
      * @return {Promise<Station[]>}
      */
-    static getNearbyStations(lat, long, limit = 10) {
+    static getNearbyStations(lat, long) {
         return new Promise((resolve, reject) => {
             fetch(API_URL + 'locations?x=' + lat + '&y=' + long + '&type=station')
                 .then(response => response.json())
@@ -171,8 +169,8 @@ class RemoteData {
 
                     // We need to wait for all the promises to be resolved before continuing
                     Promise.all(stationList).then(stationList => {
-                        if (stationList.length > limit) {
-                            stationList = stationList.slice(0, limit);
+                        if (stationList.length > Config.get('nbBusByProximity', 5)) {
+                            stationList = stationList.slice(0, Config.get('nbBusByProximity', 5));
                         }
 
                         resolve(stationList);
@@ -190,14 +188,13 @@ class RemoteData {
      * @param {Station} to
      * @param {Date} datetime
      * @param {boolean} isArrivalTime If true, the datetime parameter will be used as the arrival time
-     * @param {number} limit The maximum number of connections to return
      * @return {Promise<Connection[]>}
      */
-    static getConnections(from, to, datetime = new Date(), isArrivalTime = false, limit = 6) {
+    static getConnections(from, to, datetime = new Date(), isArrivalTime = false) {
         return new Promise((resolve, reject) => {
             let date = datetime.toISOString().split('T')[0];
             let time = datetime.toISOString().split('T')[1].split('.')[0];
-            fetch(API_URL + 'connections?from=' + from.id + '&to=' + to.id + '&date=' + date + '&time=' + time + '&isArrivalTime=' + isArrivalTime + '&limit=' + limit)
+            fetch(API_URL + 'connections?from=' + from.id + '&to=' + to.id + '&date=' + date + '&time=' + time + '&isArrivalTime=' + isArrivalTime + '&limit=' + Config.get('maxConnections', 6))
                 .then(response => response.json())
                 .then(data => {
                     let connectionList = [];

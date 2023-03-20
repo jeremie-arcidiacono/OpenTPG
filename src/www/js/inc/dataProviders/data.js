@@ -82,25 +82,23 @@ class Data {
      * Get a list of bus which will stop at the station
      * @param {Station} station
      * @param {number} limit
-     * @param {number} maxTimeLimit The maximum time to wait for a bus (in minutes)
      * @return {Promise<Bus[]>}
      */
-    static getStationboard(station, limit = 256, maxTimeLimit = 60) {
-        return RemoteData.getStationboard(station, limit, maxTimeLimit);
+    static getStationboard(station, limit = 256) {
+        return RemoteData.getStationboard(station, limit);
     }
 
     /**
      * Get a list of the nearest stations from the current position
-     * @param {number} limit The maximum number of results (default: 10)
      * @return {Promise<Station[]>}
      */
-    static getNearbyStations(limit = 10) {
+    static getNearbyStations() {
         return new Promise((resolve, reject) => {
             // Get the current position
             navigator.geolocation.getCurrentPosition(
                 position => {
                     // Get the list of nearby stations
-                    RemoteData.getNearbyStations(position.coords.latitude, position.coords.longitude, limit)
+                    RemoteData.getNearbyStations(position.coords.latitude, position.coords.longitude)
                         .then(stations => {
                             resolve(stations);
                         })
@@ -134,10 +132,9 @@ class Data {
      * @param {Station} to
      * @param {Date} datetime
      * @param {boolean} isArrivalTime If true, the datetime parameter will be used as the arrival time
-     * @param {number} limit The maximum number of connections to return
      * @return {Promise<Connection[]>}
      */
-    static getConnections(from, to, datetime = new Date(), isArrivalTime = false, limit = 6) {
-        return RemoteData.getConnections(from, to, datetime, isArrivalTime, limit);
+    static getConnections(from, to, datetime = new Date(), isArrivalTime = false) {
+        return RemoteData.getConnections(from, to, datetime, isArrivalTime);
     }
 }
