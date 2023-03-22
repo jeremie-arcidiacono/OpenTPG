@@ -13,8 +13,13 @@ function onDeviceReady() {
     Config.initConfig();
 
     if (!networkIsAvailable()) {
-        alert('Connexion internet non disponible. Veuillez vérifier votre connexion.');
+        console.warn("No internet connection available. The app can't be launched.")
+        alert('Connexion internet non disponible. Veuillez vérifier votre connexion et relancer l\'application.');
     } else {
+        document.addEventListener("offline", () => {
+            alert('Connexion internet non disponible. Veuillez vous reconnecter pour utiliser l\'application.');
+        }, false);
+
         if (LocalData.isLocalStorageAvailable()) {
             // Before displaying the real data, we try to send a random request to the API to check if the data is available
             isRemoteDataAvailable(() => {
@@ -25,7 +30,8 @@ function onDeviceReady() {
             });
 
             // In background, run the update of the local storage data.
-            updateLocalStorage(() => {});
+            updateLocalStorage(() => {
+            });
         } else {
             // First time the app is launched, we need to download the data BEFORE displaying the app
             updateLocalStorage(() => {
@@ -76,7 +82,7 @@ function isRemoteDataAvailable(successCallback) {
 
 function onResume() {
     if (!networkIsAvailable()) {
-        alert('No network connection');
+        alert('Connexion internet non disponible. Veuillez vous reconnecter pour utiliser l\'application.');
     }
 }
 
@@ -86,7 +92,7 @@ function onResume() {
  * @returns {boolean}
  */
 function networkIsAvailable() {
-    return navigator.connection.type !== Connection.NONE;
+    return navigator.connection.type !== 'none';
 }
 
 /**
