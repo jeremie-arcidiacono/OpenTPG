@@ -17,4 +17,5 @@
         <uses-permission name="android.permission.ACCESS_FINE_LOCATION"/>
         <uses-permission name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
     </platform>
+    <icon src="assets/app_logo.png" />
 </widget>
