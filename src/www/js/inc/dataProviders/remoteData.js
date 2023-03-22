@@ -194,7 +194,7 @@ class RemoteData {
         return new Promise((resolve, reject) => {
             let date = datetime.toISOString().split('T')[0];
             let time = datetime.toISOString().split('T')[1].split('.')[0];
-            fetch(API_URL + 'connections?from=' + from.id + '&to=' + to.id + '&date=' + date + '&time=' + time + '&isArrivalTime=' + isArrivalTime + '&limit=' + Config.get('maxConnections', 6))
+            fetch(API_URL + 'connections?from=' + from.id + '&to=' + to.id + '&date=' + date + '&time=' + time + '&isArrivalTime=' + isArrivalTime + '&limit=' + Config.get('nbConnections', 6))
                 .then(response => response.json())
                 .then(data => {
                     let connectionList = [];
