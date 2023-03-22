@@ -754,12 +754,12 @@
         const busNumbersDiv = document.createElement("div");
         busNumbersDiv.classList.add("bus-numbers");
 
-        result.lines.forEach((busNumber) => {
+        result.lines.forEach((line) => {
           const busNumberItem = document.createElement("div");
           busNumberItem.classList.add("bus-number");
-          busNumberItem.innerText = busNumber.name;
-          busNumberItem.style.backgroundColor = busNumber.backgroundColor;
-          busNumberItem.style.color = busNumber.color;
+          busNumberItem.innerText = line.getFormattedName();
+          busNumberItem.style.backgroundColor = line.backgroundColor;
+          busNumberItem.style.color = line.color;
           busNumbersDiv.appendChild(busNumberItem);
         });
 
