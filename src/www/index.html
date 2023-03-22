@@ -1,5 +1,5 @@
 <style>
-/**
+  /**
  * Authors : Grégoire Péan & Jérémie Arcidiacono
  * Date : January - March 2023
  * Description : Main page of the application
@@ -70,12 +70,15 @@
   <script src="js/index.js"></script>
 </html>
 <style>
-@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
-@import url("https://fonts.googleapis.com/icon?family=Material+Icons+Outlined");
+  @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+  @import url("https://fonts.googleapis.com/icon?family=Material+Icons+Outlined");
 </style>
 
-
 <script>
+  let dep = "";
+  let arr = "";
+  let date = "";
+
   function clearClass(node, className) {
     node.classList.remove(className);
   }
@@ -86,23 +89,24 @@
 
   // Displays nearby and favorite bus stations, handling errors if GPS is not available
   function displayBusProx() {
-    Data.getNearbyStations().then((stations) => {
-      if (stations.length == 0) {
-        alert("Aucune station de bus à proximité");
-      } else if (document.getElementById("search").value == "") {
-        Clear();
-        displayBus("A proximité", stations);
-      }
-      displayBusFav();
-    })
-    .catch((error) => {
-      console.warn("GPS is not available");
-      displayBusFav();
-    });
+    Data.getNearbyStations()
+      .then((stations) => {
+        if (stations.length == 0) {
+          alert("Aucune station de bus à proximité");
+        } else if (document.getElementById("search").value == "") {
+          Clear();
+          displayBus("A proximité", stations);
+        }
+        displayBusFav();
+      })
+      .catch((error) => {
+        console.warn("GPS is not available");
+        displayBusFav();
+      });
   }
 
   // Display the stop of the search
-  function displaySearch() {
+  function displaySearch(page = "schedule") {
     let searchBox = document.createElement("div");
     searchBox.classList.add("search-box");
     let input = document.createElement("input");
@@ -124,7 +128,7 @@
     searchBox.appendChild(input);
 
     // Append the searchBox element to an existing element in the DOM
-    let container = document.getElementById("schedule");
+    let container = document.getElementById(page);
     container.appendChild(searchBox);
     container.appendChild(stop);
     container.appendChild(stopFav);
@@ -150,16 +154,22 @@
 
   function ClearAll() {
     document.getElementById("schedule").innerHTML = "";
+    document.getElementById("sync_alt").innerHTML = "";
+    document.getElementById("bus_alert").innerHTML = "";
+    document.getElementById("tune").innerHTML = "";
   }
 
   function ScheduleDisplay() {
+    StatusBar.backgroundColorByHexString("#191c1e");
     ClearAll();
     displaySearch();
     displayBusProx();
   }
 
   function SyncAltDisplay() {
+    StatusBar.backgroundColorByHexString("#191c1e");
     ClearAll();
+    DisplayFormIti();
   }
 
   function BusAlertDisplay() {}
@@ -251,7 +261,7 @@
         let getStationboardPromise = Data.getStationboard(station);
         getStationboardPromise.then((bus) => {
           if (getStationboardPromiseIsCancelled) {
-              return;
+            return;
           }
           if (bus.length == 0) {
             alert("Aucun bus à venir");
@@ -279,8 +289,8 @@
               let busArrivalTime = document.createElement("div");
               busArrivalTime.classList.add("bus-arrival-time");
               busArrivalTime.textContent = `${bu
-                      .getNearestStop()
-                      .getMinutesLeft()} min`;
+                .getNearestStop()
+                .getMinutesLeft()} min`;
               busListItem.appendChild(busArrivalTime);
 
               busListContainer.appendChild(busListItem);
@@ -355,84 +365,84 @@
           document.removeEventListener("backbutton", backButtonEvent, false);
         });
         navbarRight.onclick = function () {
-          station.setIsFavorite(!station.getIsFavorite())
+          station.setIsFavorite(!station.getIsFavorite());
         };
 
         // Créer le style CSS
         const style = document.createElement("style");
         style.innerHTML = `@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
-            @import url("https://fonts.googleapis.com/icon?family=Material+Icons+Outlined");
+              @import url("https://fonts.googleapis.com/icon?family=Material+Icons+Outlined");
 
-            .navbar {
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              height: 60px;
-              padding: 0 20px;
-              margin-top: 30px;
-              border-bottom: 1px solid #c2c2c2;
-            }
+              .navbar {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                height: 60px;
+                padding: 0 20px;
+                margin-top: 30px;
+                border-bottom: 1px solid #c2c2c2;
+              }
 
-            .navbar__left,
-            .navbar__right {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              width: 40px;
-              height: 100%;
-              cursor: pointer;
-            }
+              .navbar__left,
+              .navbar__right {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 40px;
+                height: 100%;
+                cursor: pointer;
+              }
 
-            .navbar__center {
-              text-align: center;
-            }
+              .navbar__center {
+                text-align: center;
+              }
 
-            .navbar__center h1 {
-              margin: 0;
-              font-size: 20px;
-            }
+              .navbar__center h1 {
+                margin: 0;
+                font-size: 20px;
+              }
 
-            .fas {
-              font-size: 24px;
-            }
-            .clicked {
-              transform: scale(0.8);
-            }
+              .fas {
+                font-size: 24px;
+              }
+              .clicked {
+                transform: scale(0.8);
+              }
 
-            .material-icons-outlined{
+              .material-icons-outlined{
 
-              color: #c2c2c2;
-            }`;
+                color: #c2c2c2;
+              }`;
 
         document.head.appendChild(style);
 
         let container = document.getElementById("schedule");
         container.appendChild(navbar);
 
-        const leftIcon = document.querySelector('.navbar__left i');
-        const rightIcon = document.querySelector('.navbar__right i');
+        const leftIcon = document.querySelector(".navbar__left i");
+        const rightIcon = document.querySelector(".navbar__right i");
 
-        leftIcon.addEventListener('click', () => {
-          leftIcon.classList.add('clicked');
+        leftIcon.addEventListener("click", () => {
+          leftIcon.classList.add("clicked");
           setTimeout(() => {
-            leftIcon.classList.remove('clicked');
+            leftIcon.classList.remove("clicked");
           }, 300);
         });
 
-        rightIcon.addEventListener('click', () => {
-          rightIcon.classList.add('clicked');
+        rightIcon.addEventListener("click", () => {
+          rightIcon.classList.add("clicked");
           setTimeout(() => {
-            rightIcon.classList.remove('clicked');
+            rightIcon.classList.remove("clicked");
           }, 300);
         });
 
-        const heartIcon = document.querySelector('.navbar__right i');
+        const heartIcon = document.querySelector(".navbar__right i");
 
-        heartIcon.addEventListener('click', () => {
-          if (heartIcon.innerHTML == 'bookmark_added') {
-            heartIcon.innerHTML = 'bookmark_remove';
+        heartIcon.addEventListener("click", () => {
+          if (heartIcon.innerHTML == "bookmark_added") {
+            heartIcon.innerHTML = "bookmark_remove";
           } else {
-            heartIcon.innerHTML = 'bookmark_added';
+            heartIcon.innerHTML = "bookmark_added";
           }
         });
       };
@@ -473,6 +483,330 @@
       displayBus("Favoris", FavStations);
     } else {
       console.log("Aucun favoris");
+    }
+  }
+
+  // ajouter un event listener pour afficher les itinéraires
+  function DisplayFormIti() {
+    ClearAll();
+
+    // Create the search container div
+    const searchContainer = document.createElement("div");
+    searchContainer.classList.add("search-container");
+
+    // Create the search input element for Departure
+    const searchInput = document.createElement("input");
+    searchInput.type = "text";
+    searchInput.classList.add("search-input");
+    searchInput.placeholder = "Departure";
+    searchInput.id = "search-input";
+    searchInput.addEventListener("input", search);
+
+    // Create the search results div for Departure
+    const searchResults = document.createElement("div");
+    searchResults.classList.add("search-results");
+    searchResults.id = "searchResults";
+
+    // Append the search input and results to the search container
+    searchContainer.appendChild(searchInput);
+    searchContainer.appendChild(searchResults);
+
+    // Create the search input element for Arrival
+    const arrivalInput = document.createElement("input");
+    arrivalInput.type = "text";
+    arrivalInput.classList.add("search-input");
+    arrivalInput.id = "arrival-input";
+    arrivalInput.placeholder = "Arrival";
+    arrivalInput.addEventListener("input", searchArrival);
+
+    // Create the search results div for Arrival
+    const arrivalSearchResults = document.createElement("div");
+    arrivalSearchResults.classList.add("search-results");
+    arrivalSearchResults.id = "arrivalSearchResults";
+
+    // Append the arrival input and results to the search container
+    searchContainer.appendChild(arrivalInput);
+    searchContainer.appendChild(arrivalSearchResults);
+
+    // Create the outer div element with class 'datetime-wrapper'
+    const datetimeWrapper = document.createElement("div");
+    datetimeWrapper.classList.add("datetime-wrapper");
+
+    // Create the input wrapper div element
+    const inputWrapper = document.createElement("div");
+    inputWrapper.classList.add("input-wrapper");
+
+    // Create the label element with 'for' attribute set to 'date'
+    const label = document.createElement("label");
+    label.textContent = "Date";
+    label.setAttribute("for", "date");
+
+    // Create the input element with type 'datetime-local' and 'id' and 'name' attributes set to 'date'
+    const input = document.createElement("input");
+    input.setAttribute("type", "datetime-local");
+    input.setAttribute("id", "date");
+    input.setAttribute("name", "date");
+
+    // Append the label and input elements to the input wrapper div element
+    inputWrapper.appendChild(label);
+    inputWrapper.appendChild(input);
+
+    /*
+      //create a span for add icon on search button
+      const span = document.createElement("span");
+      span.classList.add("material-icons-outlined");
+      span.textContent = "navigation";
+      //rotate the icon 90 degree
+      span.style.padding = "10px";
+      span.style.backgroundColor = "#1f72a9";
+      span.style.display = "block";
+      span.style.transform = "rotate(90deg)";
+      span.style.fontSize = "20px";
+      span.style.verticalAlign = "middle";*/
+
+    //add another span for add text on search button$
+    const spanText = document.createElement("span");
+    spanText.textContent = "Search";
+
+    // Create the search button element with 'type' attribute set to 'submit' and 'id' attribute set to 'search-btn'
+    const searchBtn = document.createElement("button");
+    searchBtn.setAttribute("type", "submit");
+    searchBtn.setAttribute("id", "search-btn");
+    searchBtn.style.width = "30%";
+    searchBtn.style.whiteSpace = "nowrap";
+    searchBtn.style.height = "39px";
+
+    // Append the span to the search button element
+    //searchBtn.appendChild(span);
+    searchBtn.appendChild(spanText);
+
+    // Append the input wrapper and search button elements to the outer datetime wrapper div element
+    datetimeWrapper.appendChild(inputWrapper);
+    datetimeWrapper.appendChild(searchBtn);
+
+    // Append the search container to the body
+    document.getElementById("sync_alt").appendChild(searchContainer);
+    searchContainer.appendChild(datetimeWrapper);
+
+    //create the div for results
+    const resultsDiv = document.createElement("div");
+    resultsDiv.classList.add("results");
+    resultsDiv.id = "results";
+    document.getElementById("sync_alt").appendChild(resultsDiv);
+
+    searchBtn.addEventListener("click", () => {
+      //clear the results div
+      resultsDiv.innerHTML = "";
+      if (dep == "" || arr == "") {
+        const errorDiv = document.createElement("div");
+        errorDiv.classList.add("error");
+        errorDiv.textContent = "Please select a departure and arrival station";
+        resultsDiv.appendChild(errorDiv);
+      } else {
+        if (date == "") {
+          date = new Date();
+        }
+        const itineraries = Data.getConnections(dep, arr, date);
+        //is a promise
+        itineraries.then((data) => {
+          console.log(data);
+          if (data.length == 0) {
+            const errorDiv = document.createElement("div");
+            errorDiv.classList.add("error");
+            errorDiv.textContent = "No itineraries found";
+            resultsDiv.appendChild(errorDiv);
+          } else {
+            document.getElementById("results").innerHTML = "";
+
+            //create a list for the results
+            const list = document.createElement("ul");
+            list.classList.add("list");
+            list.id = "list";
+            document.getElementById("results").appendChild(list);
+
+            data.forEach((journeysData) => {
+              // Récupérer les éléments de conteneur de liste et de détails
+              const journeyListContainer = document.getElementById("results");
+
+              // Obtenir l'heure de départ -> journeysData.getDeparture.time;
+              // Obtenir l'heure d'arrivée -> journeysData.getArrival.time;
+              // Obtenir la durée -> journeysData.getDuration;
+
+              // Créer l'élément de liste
+              const listItem = document.createElement("li");
+              listItem.classList.add("list-item");
+
+              // Créer l'élément de conteneur de détails
+              const detailsContainer = document.createElement("div");
+              detailsContainer.classList.add("details-container");
+
+              // Créer l'élément de détails
+              const details = document.createElement("div");
+              details.classList.add("details");
+
+              // Créer l'élément d'heure de départ
+              const departureTime = document.createElement("div");
+              departureTime.classList.add("departure-time");
+
+
+              let departureTimeText = journeysData.getDeparture().time;
+              //convert the time object to 24 hours format
+              let formattedTime = departureTimeText.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute:'2-digit' });
+
+              departureTime.textContent = formattedTime;
+
+              // Créer l'élément d'heure d'arrivée
+              const arrivalTime = document.createElement("div");
+              arrivalTime.classList.add("arrival-time");
+
+              let arrivalTimeText = journeysData.getArrival().time;
+              //convert the time object to 24 hours format
+              let formattedArrivalTime = arrivalTimeText.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute:'2-digit' });
+
+              arrivalTime.textContent = formattedArrivalTime;
+
+              // Créer l'élément de durée
+              const duration = document.createElement("div");
+              duration.classList.add("duration");
+              duration.textContent = journeysData.getDuration() + " min";
+
+              // Ajouter les éléments d'heure de départ, d'heure d'arrivée et de durée à l'élément de détails
+              details.appendChild(departureTime);
+              details.appendChild(arrivalTime);
+              details.appendChild(duration);
+
+              // Ajouter l'élément de détails à l'élément de liste
+              listItem.appendChild(details);
+
+              // Ajouter l'élément de liste au conteneur de liste
+              document.getElementById("list").appendChild(listItem);
+
+              //Cree un div pour afficher les bus de class bus-numbers
+              const busNumbers = document.createElement("div");
+              busNumbers.classList.add("bus-numbers");
+              busNumbers.id = "bus-numbers-traj";
+
+              // affiche tous les bus par lequel passe le trajet
+              journeysData.journeys.forEach((journey) => {
+                //pour chaque journey on affiche son bus journey.line.name;    
+                const busNumber = document.createElement("div");
+                busNumber.classList.add("bus-number");
+
+                busNumber.textContent = journey.line.name;
+                busNumber.style.backgroundColor = journey.line.color;
+                busNumber.style.color = journey.line.textcolor;
+                busNumbers.appendChild(busNumber);
+
+              });
+
+              // Ajouter l'élément de détails à l'élément de liste
+              listItem.appendChild(busNumbers);
+
+            });
+          }
+        });
+      }
+    });
+
+    //add and event when the the date is changed
+    document.getElementById("date").addEventListener("change", () => {
+      //clear the results div
+      date = new Date(document.getElementById("date").value);
+    });
+  }
+
+  function search(event) {
+    const input = event.target.value;
+
+    if (input.length > 0) {
+      // Simulate an API call or fetching results from a data source
+      const results = Data.getStationByPartialName(input);
+
+      // Clear the previous results
+      searchResults.innerHTML = "";
+
+      // Show the results
+      results.forEach((result) => {
+        const searchItem = document.createElement("div");
+        searchItem.classList.add("search-item");
+        searchItem.innerText = result.name;
+        searchItem.addEventListener("click", () => {
+          // Set the input value to the result
+
+          document.getElementById("search-input").value = result.name;
+          dep = result;
+          //clear the results
+          searchResults.innerHTML = "";
+        });
+
+        //add the bus numbers
+        const busNumbersDiv = document.createElement("div");
+        busNumbersDiv.classList.add("bus-numbers");
+
+        result.lines.forEach((busNumber) => {
+          const busNumberItem = document.createElement("div");
+          busNumberItem.classList.add("bus-number");
+          busNumberItem.innerText = busNumber.name;
+          busNumberItem.style.backgroundColor = busNumber.backgroundColor;
+          busNumberItem.style.color = busNumber.color;
+          busNumbersDiv.appendChild(busNumberItem);
+        });
+
+        // append the busNumbersDiv to the searchItem div
+        searchItem.appendChild(busNumbersDiv);
+        searchResults.appendChild(searchItem);
+      });
+
+      searchResults.classList.add("active");
+    } else {
+      searchResults.classList.remove("active");
+    }
+  }
+
+  function searchArrival(event) {
+    const input = event.target.value;
+
+    if (input.length > 0) {
+      // Simulate an API call or fetching results from a data source
+      const results = Data.getStationByPartialName(input);
+
+      // Clear the previous results
+      arrivalSearchResults.innerHTML = "";
+
+      // Show the results
+      results.forEach((result) => {
+        const searchItem = document.createElement("div");
+        searchItem.classList.add("search-item");
+        searchItem.innerText = result.name;
+        searchItem.addEventListener("click", () => {
+          arr = result;
+          // Set the input value to the result
+          document.getElementById("arrival-input").value = result.name;
+          //clear the results
+          arrivalSearchResults.innerHTML = "";
+        });
+
+        //add the bus numbers
+        const busNumbersDiv = document.createElement("div");
+        busNumbersDiv.classList.add("bus-numbers");
+
+        result.lines.forEach((busNumber) => {
+          const busNumberItem = document.createElement("div");
+          busNumberItem.classList.add("bus-number");
+          busNumberItem.innerText = busNumber.name;
+          busNumberItem.style.backgroundColor = busNumber.backgroundColor;
+          busNumberItem.style.color = busNumber.color;
+          busNumbersDiv.appendChild(busNumberItem);
+        });
+
+        // append the busNumbersDiv to the searchItem div
+        searchItem.appendChild(busNumbersDiv);
+        arrivalSearchResults.appendChild(searchItem);
+      });
+
+      arrivalSearchResults.classList.add("active");
+    } else {
+      arrivalSearchResults.classList.remove("active");
     }
   }
 </script>
