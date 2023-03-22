@@ -68,7 +68,7 @@ class RemoteData {
                                 bus.number = bus.number.replace('T ', '');
                             }
                             let line = LocalData.getLineByName(bus.number);
-                            if (line !== null){
+                            if (line !== null) {
                                 busList.push(new Bus(line, nextStop));
                             }
                         } else {
@@ -79,7 +79,7 @@ class RemoteData {
                                     bus.category = bus.category.replace('T ', '');
                                 }
                                 let line = LocalData.getLineByName(bus.category);
-                                if (line !== null){
+                                if (line !== null) {
                                     busList.push(new Bus(line, nextStop));
                                 }
                             }
@@ -207,6 +207,10 @@ class RemoteData {
                             let arrivalStationPromise = Data.getStationById(section.arrival.station.id);
 
                             promises.push(Promise.all([departureStationPromise, arrivalStationPromise]).then(stations => {
+                                if (section.journey === null || section.journey.number === undefined) {
+                                    return;
+                                }
+
                                 let lineNumber = section.journey.number;
 
                                 if (lineNumber.startsWith('T ')) {
