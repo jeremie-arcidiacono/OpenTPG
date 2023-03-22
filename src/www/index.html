@@ -160,7 +160,7 @@
   }
 
   function ScheduleDisplay() {
-    StatusBar.backgroundColorByHexString("#191c1e");
+    StatusBar.backgroundColorByHexString("#374955");
     ClearAll();
     displaySearch();
     displayBusProx();
@@ -643,21 +643,27 @@
               // Créer l'élément de détails
               const details = document.createElement("div");
               details.classList.add("details");
+              details.style.display = "flex";
+              details.style.margin = "20px";
 
               // Créer l'élément d'heure de départ
               const departureTime = document.createElement("div");
               departureTime.classList.add("departure-time");
+              departureTime.style.fontSize = "20px";
+              departureTime.style.color = "#c2c2c2";
 
 
               let departureTimeText = journeysData.getDeparture().time;
               //convert the time object to 24 hours format
               let formattedTime = departureTimeText.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute:'2-digit' });
 
-              departureTime.textContent = formattedTime;
+              departureTime.textContent = formattedTime + " -  ";
 
               // Créer l'élément d'heure d'arrivée
               const arrivalTime = document.createElement("div");
               arrivalTime.classList.add("arrival-time");
+              arrivalTime.style.fontSize = "20px";
+              arrivalTime.style.color = "#c2c2c2";
 
               let arrivalTimeText = journeysData.getArrival().time;
               //convert the time object to 24 hours format
@@ -668,6 +674,9 @@
               // Créer l'élément de durée
               const duration = document.createElement("div");
               duration.classList.add("duration");
+              duration.style.fontSize = "20px";
+              duration.style.color = "#c2c2c2";
+              duration.style.marginLeft = "3%";
               duration.textContent = journeysData.getDuration() + " min";
 
               // Ajouter les éléments d'heure de départ, d'heure d'arrivée et de durée à l'élément de détails
@@ -693,14 +702,14 @@
                 busNumber.classList.add("bus-number");
 
                 busNumber.textContent = journey.line.name;
-                busNumber.style.backgroundColor = journey.line.color;
+                busNumber.style.backgroundColor = journey.line.backgroundColor;
                 busNumber.style.color = journey.line.textcolor;
                 busNumbers.appendChild(busNumber);
 
               });
 
               // Ajouter l'élément de détails à l'élément de liste
-              listItem.appendChild(busNumbers);
+              details.appendChild(busNumbers);
 
             });
           }
@@ -711,7 +720,9 @@
     //add and event when the the date is changed
     document.getElementById("date").addEventListener("change", () => {
       //clear the results div
-      date = new Date(document.getElementById("date").value);
+      if (document.getElementById("date").value != ""){
+        date = new Date(document.getElementById("date").value);
+      }
     });
   }
 
