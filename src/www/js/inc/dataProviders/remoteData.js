@@ -217,10 +217,15 @@ class RemoteData {
                                     lineNumber = lineNumber.replace('T ', '');
                                 }
 
+                                let line = LocalData.getLineByName(lineNumber);
+                                if (line === null) {
+                                    return;
+                                }
+
                                 journeyList.push(new Journey(
                                     new Stop(stations[0], new Date(section.departure.departure)),
                                     new Stop(stations[1], new Date(section.arrival.arrival)),
-                                    LocalData.getLineByName(lineNumber)));
+                                    line));
                             }));
                         });
                         connectionList.push(new Connection(journeyList));
